@@ -13,7 +13,16 @@
         android:theme="@style/Theme.Atal_JBernardes_JFinalProject"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity"
+            android:name=".Activities.TabActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activities.Following"
+            android:exported="false" />
+        <activity
+            android:name=".Activities.Followers"
+            android:exported="false" />
+        <activity
+            android:name=".Activities.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -1,4 +1,4 @@
-package com.example.atal_jbernardes_jfinalproject;
+package com.example.atal_jbernardes_jfinalproject.Activities;
 
 import android.os.Bundle;
 
@@ -7,6 +7,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+
+import com.example.atal_jbernardes_jfinalproject.R;
 
 public class Followers extends AppCompatActivity {
 
