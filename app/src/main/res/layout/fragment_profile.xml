@@ -9,7 +9,11 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingLeft="20dp"
+        android:paddingTop="20dp"
+        android:paddingRight="20dp"
+        android:paddingBottom="20dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -18,10 +22,15 @@
 
             <ImageView
                 android:id="@+id/imageView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_weight="0"
                 tools:src="@tools:sample/avatars" />
+
+            <Space
+                android:layout_width="20dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -49,6 +58,14 @@
                     android:layout_height="wrap_content"
                     android:text="Bio"
                     android:textSize="15sp" />
+
+                <Button
+                    android:id="@+id/followButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Follow"
+                    tools:visibility="gone" />
+
             </LinearLayout>
         </LinearLayout>
 
