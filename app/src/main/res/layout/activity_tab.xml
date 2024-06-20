@@ -8,9 +8,12 @@
     tools:context=".Activities.TabActivity">
 
     <com.google.android.material.tabs.TabLayout
-        android:layout_width="match_parent"
+        android:id="@+id/tabLayout"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
         <com.google.android.material.tabs.TabItem
             android:id="@+id/homeTabItem"
@@ -28,7 +31,7 @@
             android:id="@+id/newPostTabItem"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Add Tweet" />
+            android:text="Add Post" />
 
         <com.google.android.material.tabs.TabItem
             android:id="@+id/profileTabItem"
@@ -42,4 +45,13 @@
             android:layout_height="wrap_content"
             android:text="Settings" />
     </com.google.android.material.tabs.TabLayout>
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/viewPager2"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/tabLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

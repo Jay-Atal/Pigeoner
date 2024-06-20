@@ -12,10 +12,10 @@ import com.example.atal_jbernardes_jfinalproject.R;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link AddTweet#newInstance} factory method to
+ * Use the {@link AddPost#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class AddTweet extends Fragment {
+public class AddPost extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -26,7 +26,7 @@ public class AddTweet extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public AddTweet() {
+    public AddPost() {
         // Required empty public constructor
     }
 
@@ -39,8 +39,8 @@ public class AddTweet extends Fragment {
      * @return A new instance of fragment AddTweet.
      */
     // TODO: Rename and change types and number of parameters
-    public static AddTweet newInstance(String param1, String param2) {
-        AddTweet fragment = new AddTweet();
+    public static AddPost newInstance(String param1, String param2) {
+        AddPost fragment = new AddPost();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -61,6 +61,6 @@ public class AddTweet extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_add_tweet, container, false);
+        return inflater.inflate(R.layout.fragment_add_post, container, false);
     }
 }
