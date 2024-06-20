@@ -10,6 +10,7 @@ import com.example.atal_jbernardes_jfinalproject.Fragments.Explore;
 import com.example.atal_jbernardes_jfinalproject.Fragments.Home;
 import com.example.atal_jbernardes_jfinalproject.Fragments.Profile;
 import com.example.atal_jbernardes_jfinalproject.Fragments.Settings;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class ViewPagerAdapter extends FragmentStateAdapter {
     public ViewPagerAdapter(@NonNull FragmentActivity fragmentActivity) {
@@ -23,7 +24,7 @@ public class ViewPagerAdapter extends FragmentStateAdapter {
             case 0: return new Home();
             case 1: return new Explore();
             case 2: return new AddPost();
-            case 3: return new Profile();
+            case 3: return new Profile(FirebaseAuth.getInstance().getUid());
             case 4: return new Settings();
             default: return new Home();
         }

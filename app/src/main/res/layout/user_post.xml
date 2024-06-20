@@ -6,6 +6,11 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_weight="1" />
+
     <LinearLayout
         android:id="@+id/userAccountInfo"
         android:layout_width="match_parent"
@@ -74,5 +79,10 @@
             android:layout_weight="1"
             android:text="Comment" />
     </LinearLayout>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_weight="1" />
 
 </LinearLayout>

@@ -1,23 +1,35 @@
 package com.example.atal_jbernardes_jfinalproject.Adapters;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.example.atal_jbernardes_jfinalproject.Elements.Pigeon;
 import com.example.atal_jbernardes_jfinalproject.Elements.Post;
 import com.example.atal_jbernardes_jfinalproject.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.List;
 
 public class PostAdapter extends RecyclerView.Adapter<PostViewHolder> {
-    private List<Post> myPosts;
+    private List<Pigeon> myPosts;
 
-    public PostAdapter(@NonNull List<Post> myPosts) {this.myPosts = myPosts;}
+    private FirebaseStorage storage;
+
+
+    public PostAdapter(@NonNull List<Pigeon> myPosts) {this.myPosts = myPosts;}
     @NonNull
     @Override
     public PostViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -28,19 +40,69 @@ public class PostAdapter extends RecyclerView.Adapter<PostViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull PostViewHolder holder, int position) {
-        Post currentPost = myPosts.get(position);
+        Pigeon currentPost = myPosts.get(position);
         holder.username.setText("Username"); //change once post class has been implemented
         //change image to user pfp here
         //String iconURL = ""; //figure out how to see user icon online
         //Picasso.get().load(iconURL).fit().into(holder.profilePicture);
-        holder.postInformation.setText("Post Info"); //change once post class has been implemented
-        holder.postDate.setText("Post Date"); //change once post class has been implemented
+        holder.postInformation.setText(currentPost.getContent()); //change once post class has been implemented
+        holder.postDate.setText(currentPost.getTimestamp().toString()); //change once post class has been implemented
+        storage = FirebaseStorage.getInstance();
+
+        StorageReference httpsReference;
+        try {
+            Log.d("here", "first");
+            try {
+                httpsReference = storage.getReferenceFromUrl("gs://pigeoner-a0dab.appspot.com/"+ FirebaseAuth.getInstance().getCurrentUser().getUid());
+                extractImage(httpsReference, holder.profilePicture);
+            } catch (Exception e) {
+
+            }
+            Log.d("here", "second");
+
+        } catch (Exception e) {
+            Log.e("ImageEror", e.getMessage(), e.getCause());
+        }
+
         holder.itemView.setOnClickListener(v -> {
             //Intent postIntent = new Intent(v.getContext(), /* new class to go to */ );
             //add post id
             //v.getContext().startActivity(/*postIntent*/);
         });
     }
+
+    private void extractImage (StorageReference httpsReference, ImageView imageView){
+        try {
+            httpsReference.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+                @Override
+                public void onComplete(@NonNull Task<Uri> task) {
+                    Log.d("here", "third");
+                    task.addOnCompleteListener(new OnCompleteListener<Uri>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Uri> task) {
+                            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                            if(!task.isSuccessful() || task.getResult() == null){
+                                StorageReference httpsReference = storage.getReferenceFromUrl("gs://pigeoner-a0dab.appspot.com/default.jpeg");
+                                extractImage(httpsReference, imageView);
+                                return;
+                            }
+                            imageView.setImageURI(task.getResult());
+                            Glide.with(imageView.getContext()).load(task.getResult()).into(imageView);
+//                            Glide.with(getActivity().getApplicationContext()).load(task.getResult()).into(imageView);
+//                                   Picasso.get().load(task.getResult()).into(imageView);
+//                            Picasso.with()
+//                                    .load(task.getResult())
+//                                    .into(imageView);
+                        }
+                    });
+                    Log.d("here", "fourth");
+                }
+            });
+        } catch (Exception e) {
+
+        }
+    }
+
 
     @Override
     public int getItemCount() {

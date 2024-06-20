@@ -22,23 +22,22 @@ import androidx.core.view.WindowInsetsCompat;
 
 
 import com.example.atal_jbernardes_jfinalproject.R;
+import com.example.atal_jbernardes_jfinalproject.Elements.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-
-import java.util.HashMap;
-import java.util.Map;
-
 public class SignUp extends AppCompatActivity {
     EditText username;
+    EditText name;
     EditText password;
     EditText confirmPassword;
     Button signin;
     Button signup;
     private FirebaseAuth mAuth;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,7 +53,7 @@ public class SignUp extends AppCompatActivity {
                 Context.MODE_PRIVATE);
         boolean useDarkMode = appPreferences.getBoolean("DARK_MODE", false);
 
-        Log.v("THEME_MODE_SIGNUP", ""+useDarkMode);
+        Log.v("THEME_MODE_SIGNUP", "" + useDarkMode);
         if (useDarkMode) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
         } else {
@@ -62,7 +61,8 @@ public class SignUp extends AppCompatActivity {
         }
 
         mAuth = FirebaseAuth.getInstance();
-        username = findViewById(R.id.nameField);
+        username = findViewById(R.id.emailField);
+        name = findViewById(R.id.nameField);
         password = findViewById(R.id.amountField);
         confirmPassword = findViewById(R.id.confirmPasswordField);
         signin = findViewById(R.id.addButton);
@@ -93,6 +93,7 @@ public class SignUp extends AppCompatActivity {
         };
 
         username.addTextChangedListener(textWatcher);
+        name.addTextChangedListener(textWatcher);
         password.addTextChangedListener(textWatcher);
         confirmPassword.addTextChangedListener(textWatcher);
     }
@@ -115,12 +116,12 @@ public class SignUp extends AppCompatActivity {
         signup.setOnClickListener(v -> {
 
 
-            if(!matchingPasswords()){
+            if (!matchingPasswords()) {
                 Toast.makeText(SignUp.this, "Passwords Do Not Match", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            if(password.getText().toString().length() < 6){
+            if (password.getText().toString().length() < 6) {
                 Toast.makeText(SignUp.this, "Password must be at least 6 characters", Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -139,28 +140,27 @@ public class SignUp extends AppCompatActivity {
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d("TAG", "createUserWithEmail:success");
-                            FirebaseFirestore db = FirebaseFirestore.getInstance();
-                            Map<String, Object> data = new HashMap<>();
-                            data.put(mAuth.getCurrentUser().getUid(), email);
-                            db.collection("Users").add(data);
-                            sendUserHome();
-                            Toast.makeText(SignUp.this, "Successfully Created User " + username.getText().toString(), Toast.LENGTH_SHORT).show();
-                        } else {
+                        if (!task.isSuccessful()) {
                             Log.w("TAG", "createUserWithEmail:failure", task.getException());
                             Toast.makeText(SignUp.this, "Unable to Sign Up User \n" + task.getException().getMessage(),
                                     Toast.LENGTH_SHORT).show();
                         }
 
+                        Log.d("TAG", "createUserWithEmail:success");
+                        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+                        User user = new User(mAuth.getCurrentUser().getUid(), name.getText().toString(), email);
+
+                        db.collection("Users").document(user.getUserId()).set(user);
+                        sendUserHome();
+
+                        Toast.makeText(SignUp.this, "Successfully Created User " + username.getText().toString(), Toast.LENGTH_SHORT).show();
                     }
 
                 });
 
         // [END create_user_with_email]
     }
-
 
 
     private void sendUserHome() {

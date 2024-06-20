@@ -27,8 +27,8 @@ public class TabActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        //tabLayout = findViewById(R.id.tabLayout); //fix issue with not finding id
-        //viewPager2 = findViewById(R.id.viewPager2);
+        tabLayout = findViewById(R.id.tabLayout); //fix issue with not finding id
+        viewPager2 = findViewById(R.id.viewPager2);
         viewPagerAdapter = new ViewPagerAdapter(this); //fix issue with not finding id
         viewPager2.setAdapter(viewPagerAdapter);
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {

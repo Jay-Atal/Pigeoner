@@ -59,9 +59,9 @@ public class SignIn extends AppCompatActivity {
         }
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
-//        if(currentUser != null){
-//            sendUserHome();
-//        }
+        if(currentUser != null){
+            sendUserHome();
+        }
 
         email = findViewById(R.id.nameField);
         password = findViewById(R.id.amountField);
