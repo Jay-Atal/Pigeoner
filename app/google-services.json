@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "830151353971",
+    "project_id": "pigeoner-a0dab",
+    "storage_bucket": "pigeoner-a0dab.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:830151353971:android:ca4d488174b0930bf72c06",
+        "android_client_info": {
+          "package_name": "com.example.atal_jbernardes_jfinalproject"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDSFjOHTbGRCtIRSHl6IM6jPyGbUXcbVEs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
