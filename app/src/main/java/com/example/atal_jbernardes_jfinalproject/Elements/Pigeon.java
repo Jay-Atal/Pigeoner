@@ -35,9 +35,20 @@ public class Pigeon {
 
     private Date timestamp;
 
+    public int getLikeCount() {
+        return likeCount;
+    }
+
+    public void setLikeCount(int likeCount) {
+        this.likeCount = likeCount;
+    }
+
+    private int likeCount;
+
     public Pigeon(String userId, String content) {
         this.userId = userId;
         this.content = content;
+        this.likeCount = 0;
         timestamp = new Date();
     }
 
