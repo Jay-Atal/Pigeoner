@@ -3,6 +3,7 @@ package com.example.atal_jbernardes_jfinalproject.Activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.widget.ImageView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,7 +14,7 @@ import androidx.core.view.WindowInsetsCompat;
 import com.example.atal_jbernardes_jfinalproject.R;
 
 public class MainActivity extends AppCompatActivity {
-
+    ImageView appLogo;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,7 +25,8 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-
+        appLogo = findViewById(R.id.splashScreenImage);
+        appLogo.setImageResource(R.drawable.pigoneer_logo);
 
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
