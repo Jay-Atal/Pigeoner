@@ -264,7 +264,9 @@ public class Profile extends Fragment {
 
                 for (DocumentChange documentChange : documentChanges) {
                     Pigeon pigeon = documentChange.getDocument().toObject(Pigeon.class);
-                    pigeons.add(pigeon);
+                    if(pigeon.getUserId().equals(userId)) {
+                        pigeons.add(pigeon);
+                    }
                 }
 
                 PostAdapter postAdapter = new PostAdapter(pigeons);

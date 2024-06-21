@@ -45,6 +45,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Change Theme to Dark Mode" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="15dp" />
+
+        <Button
+            android:id="@+id/signOut"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Sign Out" />
     </LinearLayout>
 
 </FrameLayout>

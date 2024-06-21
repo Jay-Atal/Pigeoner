@@ -110,16 +110,25 @@ public class AddPost extends Fragment {
 
     private void updatePigeonsList(String pigeonId) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        Map<String, Object> data = new HashMap<>();
+
         db.collection("PigeonsByUser").document(FirebaseAuth.getInstance().getUid()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                List<String> pigeons;
+                Map<String, Object> data = new HashMap<>();
+                List<String> pigeons = new ArrayList<>();
                 if (!task.isSuccessful()) {
                     pigeons = new ArrayList<>();
                 } else {
-                    DocumentSnapshot documentSnapshot = task.getResult();
-                    pigeons = (List<String>) documentSnapshot.getData().getOrDefault("Pigeons", new HashMap<>());
+
+                    if (task != null) {
+                        DocumentSnapshot documentSnapshot = task.getResult();
+
+                        data = documentSnapshot.getData();
+                    }
+                    if(data == null){
+                        data = new HashMap<>();
+                    }
+                    pigeons = (List<String>) data.getOrDefault("Pigeons", new ArrayList<>());
                     if (pigeons == null) {
                         pigeons = new ArrayList<>();
                     }
