@@ -32,9 +32,11 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -42,6 +44,7 @@ import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -69,6 +72,9 @@ public class Profile extends Fragment {
     private ImageView imageView;
 
     private Button followButton;
+
+    RecyclerView recyclerView;
+
 
     TextView nameField, bioField;
 
@@ -124,20 +130,16 @@ public class Profile extends Fragment {
         nameField = view.findViewById(R.id.profileUsernameTextView);
         bioField = view.findViewById(R.id.profileBioTextView);
         getUserData();
-        RecyclerView recyclerView = view.findViewById(R.id.profilePostsList);
+        getPigeons();
+
         followButton = view.findViewById(R.id.followButton);
         if (userId.equals(FirebaseAuth.getInstance().getUid())) {
             followButton.setVisibility(View.GONE);
         }
 
-        List<Pigeon> pigeons = new ArrayList<>();
-        pigeons.add(new Pigeon(FirebaseAuth.getInstance().getUid(), "asdf"));
-        pigeons.add(new Pigeon(FirebaseAuth.getInstance().getUid(), "asnvalnse"));
-        pigeons.add(new Pigeon(FirebaseAuth.getInstance().getUid(), "asdlkmadsvl;knf"));
-        PostAdapter postAdapter = new PostAdapter(pigeons);
-        recyclerView.setAdapter(postAdapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recyclerView.getAdapter().notifyDataSetChanged();
+        recyclerView = view.findViewById(R.id.profilePostsList);
+
+
 
         StorageReference httpsReference;
         try {
@@ -244,6 +246,37 @@ public class Profile extends Fragment {
                 User user = documentSnapshot.toObject(User.class);
                 nameField.setText(user.getName());
                 bioField.setText(user.getBio());
+            }
+        });
+    }
+
+    private void getPigeons() {
+        List<Pigeon> pigeons = new ArrayList<>();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("Pigeons").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (!task.isSuccessful()) {
+                    return;
+                }
+                QuerySnapshot querySnapshot = task.getResult();
+                List<DocumentChange> documentChanges = querySnapshot.getDocumentChanges();
+
+                for (DocumentChange documentChange : documentChanges) {
+                    Pigeon pigeon = documentChange.getDocument().toObject(Pigeon.class);
+                    pigeons.add(pigeon);
+                }
+
+                PostAdapter postAdapter = new PostAdapter(pigeons);
+                pigeons.sort(new Comparator<Pigeon>() {
+                    @Override
+                    public int compare(Pigeon o1, Pigeon o2) {
+                        return o2.getTimestamp().compareTo(o1.getTimestamp());
+                    }
+                });
+                recyclerView.setAdapter(postAdapter);
+                recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+                recyclerView.getAdapter().notifyDataSetChanged();
             }
         });
     }
