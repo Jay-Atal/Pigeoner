@@ -2,6 +2,7 @@ package com.example.atal_jbernardes_jfinalproject.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,8 +25,16 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-        Intent intent = new Intent(MainActivity.this, SignIn.class);
-        startActivity(intent);
-        finish();
+
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Intent intent = new Intent(MainActivity.this, SignIn.class);
+                startActivity(intent);
+                finish();
+            }
+        }, 5000);
+
     }
 }

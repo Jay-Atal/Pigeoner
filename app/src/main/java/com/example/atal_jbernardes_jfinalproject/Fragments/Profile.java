@@ -23,6 +23,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.atal_jbernardes_jfinalproject.Activities.Followers;
+import com.example.atal_jbernardes_jfinalproject.Activities.Following;
 import com.example.atal_jbernardes_jfinalproject.Adapters.PostAdapter;
 import com.example.atal_jbernardes_jfinalproject.Elements.Pigeon;
 import com.example.atal_jbernardes_jfinalproject.Elements.User;
@@ -72,6 +74,9 @@ public class Profile extends Fragment {
     private ImageView imageView;
 
     private Button followButton;
+
+    private TextView followers;
+    private TextView following;
 
     RecyclerView recyclerView;
 
@@ -138,6 +143,25 @@ public class Profile extends Fragment {
                 selectImage();
             });
         }
+
+        followers = view.findViewById(R.id.profileFollowersTextView);
+        followers.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //TODO make sure connection is correct
+                Intent followersPage = new Intent(getContext(), Followers.class);
+                startActivity(followersPage, new Bundle());
+            }
+        });
+
+        following = view.findViewById(R.id.profileFollowingTextView);
+        following.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent followersPage = new Intent(getContext(), Following.class);
+                startActivity(followersPage, new Bundle());
+            }
+        });
 
         recyclerView = view.findViewById(R.id.profilePostsList);
 
