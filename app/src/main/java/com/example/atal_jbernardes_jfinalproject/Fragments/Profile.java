@@ -125,9 +125,7 @@ public class Profile extends Fragment {
         storageReference = storage.getReference();
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         imageView = view.findViewById(R.id.imageView);
-        imageView.setOnClickListener(v -> {
-            selectImage();
-        });
+
         nameField = view.findViewById(R.id.profileUsernameTextView);
         bioField = view.findViewById(R.id.profileBioTextView);
         getUserData();
@@ -136,6 +134,9 @@ public class Profile extends Fragment {
         followButton = view.findViewById(R.id.followButton);
         if (userId.equals(FirebaseAuth.getInstance().getUid())) {
             followButton.setVisibility(View.GONE);
+            imageView.setOnClickListener(v -> {
+                selectImage();
+            });
         }
 
         recyclerView = view.findViewById(R.id.profilePostsList);
