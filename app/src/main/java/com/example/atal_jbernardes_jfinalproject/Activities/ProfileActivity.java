@@ -28,7 +28,9 @@ public class ProfileActivity extends AppCompatActivity {
             return insets;
         });
 
-        Fragment exampleFragment = new Profile(FirebaseAuth.getInstance().getUid());
+        Bundle bundle = getIntent().getExtras();
+        String profileId  = bundle.getString("userId");
+        Fragment exampleFragment = new Profile(profileId);
         exampleFragment.setArguments(getIntent().getExtras());
 
 

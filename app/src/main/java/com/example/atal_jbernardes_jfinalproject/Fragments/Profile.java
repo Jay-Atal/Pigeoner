@@ -81,7 +81,7 @@ public class Profile extends Fragment {
 
     public Profile() {
         // Required empty public constructor
-        userId = "Bl0Oso4GM2h6Zup1FYfM1nI5tz63";//FirebaseAuth.getInstance().getUid();
+        userId = FirebaseAuth.getInstance().getUid();
     }
 
     private String userId;

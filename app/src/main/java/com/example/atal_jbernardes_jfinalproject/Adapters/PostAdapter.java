@@ -69,6 +69,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostViewHolder> {
 
         holder.userAccountInfo.setOnClickListener(v -> {
             Intent intent = new Intent(holder.userAccountInfo.getContext(), ProfileActivity.class);
+            intent.putExtra("userId", currentPost.getUserId());
             startActivity(holder.userAccountInfo.getContext(), intent, new Bundle());
         });
 
