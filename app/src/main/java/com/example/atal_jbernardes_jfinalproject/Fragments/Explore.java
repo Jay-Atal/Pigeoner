@@ -78,7 +78,7 @@ public class Explore extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_explore, container, false);
-        recyclerView = view.findViewById(R.id.homeRecyclerView);
+        recyclerView = view.findViewById(R.id.exploreRecyclerView);
         getPigeons();
         return view;
     }
