@@ -8,6 +8,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import com.example.atal_jbernardes_jfinalproject.Fragments.AddPost;
 import com.example.atal_jbernardes_jfinalproject.Fragments.Explore;
 import com.example.atal_jbernardes_jfinalproject.Fragments.Home;
+import com.example.atal_jbernardes_jfinalproject.Fragments.LikedPosts;
 import com.example.atal_jbernardes_jfinalproject.Fragments.Profile;
 import com.example.atal_jbernardes_jfinalproject.Fragments.Settings;
 import com.google.firebase.auth.FirebaseAuth;
@@ -23,15 +24,16 @@ public class ViewPagerAdapter extends FragmentStateAdapter {
         switch (position) {
             case 0: return new Home();
             case 1: return new Explore();
-            case 2: return new AddPost();
-            case 3: return new Profile(FirebaseAuth.getInstance().getUid());
-            case 4: return new Settings();
+            case 2: return new LikedPosts();
+            case 3: return new AddPost();
+            case 4: return new Profile(FirebaseAuth.getInstance().getUid());
+            case 5: return new Settings();
             default: return new Home();
         }
     }
 
     @Override
     public int getItemCount() {
-        return 5;
+        return 6;
     }
 }
