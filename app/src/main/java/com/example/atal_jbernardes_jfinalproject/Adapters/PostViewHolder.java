@@ -16,6 +16,7 @@ public class PostViewHolder extends RecyclerView.ViewHolder {
     TextView postInformation;
     TextView likeCount;
     TextView postDate;
+    View userAccountInfo;
     public PostViewHolder(@NonNull View itemView) {
         super(itemView);
         username = itemView.findViewById(R.id.userUsernameTextView);
@@ -23,5 +24,6 @@ public class PostViewHolder extends RecyclerView.ViewHolder {
         postInformation = itemView.findViewById(R.id.userPostTextView);
         likeCount = itemView.findViewById(R.id.likeCountTextView);
         postDate = itemView.findViewById(R.id.timeStampTextView);
+        userAccountInfo = itemView.findViewById(R.id.userAccountInfo);
     }
 }

@@ -81,6 +81,7 @@ public class Profile extends Fragment {
 
     public Profile() {
         // Required empty public constructor
+        userId = "Bl0Oso4GM2h6Zup1FYfM1nI5tz63";//FirebaseAuth.getInstance().getUid();
     }
 
     private String userId;
@@ -175,7 +176,7 @@ public class Profile extends Fragment {
                                 return;
                             }
                             imageView.setImageURI(task.getResult());
-                            Glide.with(getActivity().getApplicationContext()).load(task.getResult()).into(imageView);
+                            Glide.with(getContext()).load(task.getResult()).into(imageView);
 //                                   Picasso.get().load(task.getResult()).into(imageView);
 //                            Picasso.with()
 //                                    .load(task.getResult())

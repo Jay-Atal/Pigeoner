@@ -1,6 +1,10 @@
 package com.example.atal_jbernardes_jfinalproject.Adapters;
 
+import static androidx.core.content.ContextCompat.startActivity;
+
+import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.atal_jbernardes_jfinalproject.Activities.ProfileActivity;
 import com.example.atal_jbernardes_jfinalproject.Elements.Pigeon;
 import com.example.atal_jbernardes_jfinalproject.Elements.User;
 import com.example.atal_jbernardes_jfinalproject.R;
@@ -30,7 +35,10 @@ public class PostAdapter extends RecyclerView.Adapter<PostViewHolder> {
     private FirebaseStorage storage;
 
 
-    public PostAdapter(@NonNull List<Pigeon> myPosts) {this.myPosts = myPosts;}
+    public PostAdapter(@NonNull List<Pigeon> myPosts) {
+        this.myPosts = myPosts;
+    }
+
     @NonNull
     @Override
     public PostViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -59,11 +67,16 @@ public class PostAdapter extends RecyclerView.Adapter<PostViewHolder> {
         holder.postDate.setText(currentPost.getTimestamp().toString()); //change once post class has been implemented
         storage = FirebaseStorage.getInstance();
 
+        holder.userAccountInfo.setOnClickListener(v -> {
+            Intent intent = new Intent(holder.userAccountInfo.getContext(), ProfileActivity.class);
+            startActivity(holder.userAccountInfo.getContext(), intent, new Bundle());
+        });
+
         StorageReference httpsReference;
         try {
             Log.d("PostHere", "first");
             try {
-                httpsReference = storage.getReferenceFromUrl("gs://pigeoner-a0dab.appspot.com/"+ currentPost.getUserId());
+                httpsReference = storage.getReferenceFromUrl("gs://pigeoner-a0dab.appspot.com/" + currentPost.getUserId());
                 extractImage(httpsReference, holder.profilePicture);
             } catch (Exception e) {
 
@@ -81,7 +94,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostViewHolder> {
         });
     }
 
-    private void extractImage (StorageReference httpsReference, ImageView imageView){
+    private void extractImage(StorageReference httpsReference, ImageView imageView) {
         try {
             httpsReference.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
                 @Override
@@ -91,7 +104,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostViewHolder> {
                         @Override
                         public void onComplete(@NonNull Task<Uri> task) {
                             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                            if(!task.isSuccessful() || task.getResult() == null){
+                            if (!task.isSuccessful() || task.getResult() == null) {
                                 StorageReference httpsReference = storage.getReferenceFromUrl("gs://pigeoner-a0dab.appspot.com/default.jpeg");
                                 extractImage(httpsReference, imageView);
                                 return;
