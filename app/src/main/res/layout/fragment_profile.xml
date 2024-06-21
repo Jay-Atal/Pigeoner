@@ -60,7 +60,13 @@
                     tools:visibility="gone" />
 
             </LinearLayout>
+
         </LinearLayout>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            android:layout_weight="0" />
 
         <TextView
             android:id="@+id/profileFollowersTextView"
@@ -70,6 +76,10 @@
             android:textAlignment="center"
             android:textSize="30sp" />
 
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="5dp" />
+
         <TextView
             android:id="@+id/profileFollowingTextView"
             android:layout_width="match_parent"
@@ -77,6 +87,10 @@
             android:text="Following: 0"
             android:textAlignment="center"
             android:textSize="30sp" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="10dp" />
 
         <TextView
             android:id="@+id/recentActivityTitle"
