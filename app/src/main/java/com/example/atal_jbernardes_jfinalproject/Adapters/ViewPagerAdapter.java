@@ -1,5 +1,7 @@
 package com.example.atal_jbernardes_jfinalproject.Adapters;
 
+import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
@@ -21,6 +23,7 @@ public class ViewPagerAdapter extends FragmentStateAdapter {
     @NonNull
     @Override
     public Fragment createFragment(int position) {
+
         switch (position) {
             case 0: return new Home();
             case 1: return new Explore();

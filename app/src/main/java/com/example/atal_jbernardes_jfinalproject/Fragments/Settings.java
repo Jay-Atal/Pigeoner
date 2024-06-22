@@ -72,7 +72,7 @@ public class Settings extends Fragment {
         signOut = view.findViewById(R.id.signOut);
         signOut.setOnClickListener(v -> {
             FirebaseAuth.getInstance().signOut();
-            Intent intent = new Intent(getActivity(), MainActivity.class);
+            Intent intent = new Intent(getActivity(), SignIn.class);
             startActivity(intent);
         });
         return view;
