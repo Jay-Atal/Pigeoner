@@ -2,6 +2,8 @@ package com.example.atal_jbernardes_jfinalproject.Fragments;
 
 import static android.app.Activity.RESULT_OK;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -19,6 +21,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -85,6 +88,7 @@ public class Profile extends Fragment {
 
     private TextView followers;
     private TextView following;
+    private View nameBio;
 
     RecyclerView recyclerView;
 
@@ -92,6 +96,7 @@ public class Profile extends Fragment {
     TextView nameField, bioField;
 
     private View view;
+    private User profileUser;
 
 
     public Profile() {
@@ -146,12 +151,16 @@ public class Profile extends Fragment {
         getUserData();
         getPigeons();
 
+
+
         followButton = view.findViewById(R.id.followButton);
         if (userId.equals(FirebaseAuth.getInstance().getUid())) {
             followButton.setVisibility(View.GONE);
             imageView.setOnClickListener(v -> {
                 selectImage();
             });
+            nameBio = view.findViewById(R.id.nameBio);
+            nameBio.setOnClickListener(v -> showNameBioDialog());
         } else {
             followButton.setOnClickListener(v -> followButton());
         }
@@ -232,8 +241,6 @@ public class Profile extends Fragment {
                     list.add(value);
                     followButton.setText("Un Follow");
                 }
-
-                Toast.makeText(getActivity().getApplicationContext(), "Follow", Toast.LENGTH_SHORT).show();
                 data.put(collectionName, list);
                 db.collection(collectionName).document(document).set(data, SetOptions.merge());
             }
@@ -327,6 +334,7 @@ public class Profile extends Fragment {
                 User user = documentSnapshot.toObject(User.class);
                 nameField.setText(user.getName());
                 bioField.setText(user.getBio());
+                profileUser = user;
             }
         });
     }
@@ -405,6 +413,19 @@ public class Profile extends Fragment {
                         }
                     }
                 });
+        db.collection("Users")
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot snapshots, @Nullable FirebaseFirestoreException e) {
+                        if (e != null) {
+                            // Handle the error
+                            return;
+                        }
+                        if (snapshots != null && !snapshots.isEmpty()) {
+                            getUserData();
+                        }
+                    }
+                });
 
     }
 
@@ -473,4 +494,32 @@ public class Profile extends Fragment {
             }
         });
     }
+
+    private void  showNameBioDialog () {
+        LayoutInflater inflater = getLayoutInflater();
+        View dialogLayout = inflater.inflate(R.layout.name_bio_dialog, null);
+        final AlertDialog dialog = new AlertDialog.Builder(getContext())
+                .setView(dialogLayout)
+                .setPositiveButton(android.R.string.ok, null) //Set to null. We override the onclick
+                .setNegativeButton(android.R.string.cancel, null)
+                .create();
+        EditText nameField, bioField;
+        nameField = dialogLayout.findViewById(R.id.dialogNameField);
+        bioField = dialogLayout.findViewById(R.id.dialogBioField);
+        nameField.setText(profileUser.getName());
+        bioField.setText(profileUser.getBio());
+        dialog.setOnShowListener(dialog1 -> {
+            Button ok = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+            ok.setOnClickListener(v -> {
+                profileUser.setBio(bioField.getText().toString());
+                profileUser.setName(nameField.getText().toString());
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                db.collection("Users").document(userId).set(profileUser);
+                dialog.dismiss();
+            });
+        });
+        dialog.show();
+    }
+
+
 }
