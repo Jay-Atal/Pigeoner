@@ -12,9 +12,12 @@ import com.example.atal_jbernardes_jfinalproject.R;
 public class UserViewHolder extends RecyclerView.ViewHolder {
     TextView username;
     ImageView profilePicture;
+
+    View connectionAccountInfo;
     public UserViewHolder(@NonNull View itemView) {
         super(itemView);
         username = itemView.findViewById(R.id.friendUsernameTextView);
         profilePicture = itemView.findViewById(R.id.friendProfilePictureImage);
+        connectionAccountInfo = itemView.findViewById(R.id.connectionAccountInfo);
     }
 }

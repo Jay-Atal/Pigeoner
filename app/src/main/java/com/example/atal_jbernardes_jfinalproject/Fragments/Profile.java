@@ -157,22 +157,18 @@ public class Profile extends Fragment {
         }
 
         followers = view.findViewById(R.id.profileFollowersTextView);
-        followers.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        followers.setOnClickListener(v -> {
                 //TODO make sure connection is correct
                 Intent followersPage = new Intent(getContext(), Followers.class);
+                followersPage.putExtra("userId", userId);
                 startActivity(followersPage, new Bundle());
-            }
-        });
+            });
 
         following = view.findViewById(R.id.profileFollowingTextView);
-        following.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent followersPage = new Intent(getContext(), Following.class);
-                startActivity(followersPage, new Bundle());
-            }
+        following.setOnClickListener(v -> {
+            Intent followersPage = new Intent(getContext(), Following.class);
+            followersPage.putExtra("userId", userId);
+            startActivity(followersPage, new Bundle());
         });
 
         recyclerView = view.findViewById(R.id.profilePostsList);

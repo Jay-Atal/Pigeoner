@@ -30,7 +30,9 @@ public class TabActivity extends AppCompatActivity {
         tabLayout = findViewById(R.id.tabLayout); //fix issue with not finding id
         viewPager2 = findViewById(R.id.viewPager2);
         viewPagerAdapter = new ViewPagerAdapter(this); //fix issue with not finding id
+        viewPager2.setOffscreenPageLimit(5);
         viewPager2.setAdapter(viewPagerAdapter);
+
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {

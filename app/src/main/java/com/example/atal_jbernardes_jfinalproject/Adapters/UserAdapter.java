@@ -1,6 +1,10 @@
 package com.example.atal_jbernardes_jfinalproject.Adapters;
 
+import static androidx.core.content.ContextCompat.startActivity;
+
+import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.atal_jbernardes_jfinalproject.Activities.ProfileActivity;
 import com.example.atal_jbernardes_jfinalproject.Elements.User;
 import com.example.atal_jbernardes_jfinalproject.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -42,17 +47,23 @@ public class UserAdapter extends RecyclerView.Adapter<UserViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull UserViewHolder holder, int position) {
         User currentFriend = myFriends.get(position);
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        DocumentReference documentReference  = db.collection("Users").document(
-                currentFriend.getUserId());
-        documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                DocumentSnapshot documentSnapshot = task.getResult();
-                User user = documentSnapshot.toObject(User.class);
-                holder.username.setText(user.getUsername());
-            }
+        holder.connectionAccountInfo.setOnClickListener(v -> {
+            Intent intent = new Intent(holder.connectionAccountInfo.getContext(), ProfileActivity.class);
+            intent.putExtra("userId", currentFriend.getUserId());
+            startActivity(holder.connectionAccountInfo.getContext(), intent, new Bundle());
         });
+        holder.username.setText(currentFriend.getUsername());
+//        FirebaseFirestore db = FirebaseFirestore.getInstance();
+//        DocumentReference documentReference  = db.collection("Users").document(
+//                currentFriend.getUserId());
+//        documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//                DocumentSnapshot documentSnapshot = task.getResult();
+//                User user = documentSnapshot.toObject(User.class);
+//                holder.username.setText(user.getUsername());
+//            }
+//        });
 
         storage = FirebaseStorage.getInstance();
 
@@ -72,31 +83,31 @@ public class UserAdapter extends RecyclerView.Adapter<UserViewHolder> {
     }
 
     private void extractImage (StorageReference httpsReference, ImageView imageView) {
-//        try {
-//            httpsReference.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
-//                @Override
-//                public void onComplete(@NonNull Task<Uri> task) {
-//                    Log.d("FriendHere", "third");
-//                    task.addOnCompleteListener(new OnCompleteListener<Uri>() {
-//                        @Override
-//                        public void onComplete(@NonNull Task<Uri> task) {
-//                            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-//                            if (!task.isSuccessful() || task.getResult() == null) {
-//                                StorageReference httpsReference = storage.getReferenceFromUrl(
-//                                        "gs://pigeoner-a0dab.appspot.com/default.jpeg");
-//                                extractImage(httpsReference, imageView);
-//                                return;
-//                            }
-//                            imageView.setImageURI(task.getResult());
-//                            Glide.with(imageView.getContext()).load(task.getResult()).into(imageView);
-//                        }
-//                    });
-//                    Log.d("FriendHere", "fourth");
-//                }
-//            });
-//        } catch (Exception e) {
-//
-//        }
+        try {
+            httpsReference.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+                @Override
+                public void onComplete(@NonNull Task<Uri> task) {
+                    Log.d("FriendHere", "third");
+                    task.addOnCompleteListener(new OnCompleteListener<Uri>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Uri> task) {
+                            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                            if (!task.isSuccessful() || task.getResult() == null) {
+                                StorageReference httpsReference = storage.getReferenceFromUrl(
+                                        "gs://pigeoner-a0dab.appspot.com/default.jpeg");
+                                extractImage(httpsReference, imageView);
+                                return;
+                            }
+                            imageView.setImageURI(task.getResult());
+                            Glide.with(imageView.getContext()).load(task.getResult()).into(imageView);
+                        }
+                    });
+                    Log.d("FriendHere", "fourth");
+                }
+            });
+        } catch (Exception e) {
+
+        }
     }
 
     @Override

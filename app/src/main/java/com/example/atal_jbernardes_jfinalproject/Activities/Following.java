@@ -1,6 +1,7 @@
 package com.example.atal_jbernardes_jfinalproject.Activities;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -16,16 +17,19 @@ import com.example.atal_jbernardes_jfinalproject.Elements.User;
 import com.example.atal_jbernardes_jfinalproject.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Following extends AppCompatActivity {
     RecyclerView followingList;
+    private String userId;
+    private List<User> following;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,37 +40,58 @@ public class Following extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-
+        Bundle bundle = getIntent().getExtras();
+        userId = bundle.getString("userId");
         followingList = findViewById(R.id.followingList);
-//        getFollowing();
+        getFollowing();
     }
 
     private void getFollowing() {
-        List<User> friends = new ArrayList<>();
+        following = new ArrayList<>();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("Following").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        db.collection("Following").document(userId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                Map<String, Object> data = new HashMap<>();
+                List<String> list;
                 if (!task.isSuccessful()) {
-                    return;
-                }
-                QuerySnapshot querySnapshot = task.getResult();
-                List<DocumentChange> documentChanges = querySnapshot.getDocumentChanges();
+                    list = new ArrayList<>();
+                } else {
+                    if (task != null) {
+                        DocumentSnapshot documentSnapshot = task.getResult();
 
-                for (DocumentChange documentChange : documentChanges) {
-                    User following = documentChange.getDocument().toObject(User.class);
-                    friends.add(following);
-                }
-
-                UserAdapter userAdapter = new UserAdapter(friends);
-                friends.sort(new Comparator<User>() {
-                    @Override
-                    public int compare(User o1, User o2) {
-                        return o1.getName().compareToIgnoreCase(o2.getName());
+                        data = documentSnapshot.getData();
                     }
-                });
-                followingList.setAdapter(userAdapter);
-                followingList.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+                    if (data == null) {
+                        data = new HashMap<>();
+                    }
+                    list = (List<String>) data.getOrDefault("Following", new ArrayList<>());
+                    if (list == null) {
+                        list = new ArrayList<>();
+                    }
+                }
+                for(String id: list) {
+                    Log.d("FollowersActivity", id);
+                    getUserData(id);
+                }
+
+            }
+        });
+        UserAdapter userAdapter = new UserAdapter(following);
+        followingList.setAdapter(userAdapter);
+        followingList.setLayoutManager(new LinearLayoutManager(Following.this));
+        followingList.getAdapter().notifyDataSetChanged();
+    }
+
+    private void getUserData(String id) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference documentReference = db.collection("Users").document(id);
+        documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                DocumentSnapshot documentSnapshot = task.getResult();
+                User user = documentSnapshot.toObject(User.class);
+                following.add(user);
                 followingList.getAdapter().notifyDataSetChanged();
             }
         });
