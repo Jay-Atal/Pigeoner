@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -37,8 +38,12 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -46,8 +51,11 @@ import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -82,6 +90,8 @@ public class Profile extends Fragment {
 
 
     TextView nameField, bioField;
+
+    private View view;
 
 
     public Profile() {
@@ -126,11 +136,11 @@ public class Profile extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
-        View view = inflater.inflate(R.layout.fragment_profile, container, false);
+        view = inflater.inflate(R.layout.fragment_profile, container, false);
         imageView = view.findViewById(R.id.imageView);
-
         nameField = view.findViewById(R.id.profileUsernameTextView);
         bioField = view.findViewById(R.id.profileBioTextView);
         getUserData();
@@ -142,6 +152,8 @@ public class Profile extends Fragment {
             imageView.setOnClickListener(v -> {
                 selectImage();
             });
+        } else {
+            followButton.setOnClickListener(v -> followButton());
         }
 
         followers = view.findViewById(R.id.profileFollowersTextView);
@@ -166,7 +178,6 @@ public class Profile extends Fragment {
         recyclerView = view.findViewById(R.id.profilePostsList);
 
 
-
         StorageReference httpsReference;
         try {
             Log.d("here", "first");
@@ -181,8 +192,56 @@ public class Profile extends Fragment {
         } catch (Exception e) {
             Log.e("ImageEror", e.getMessage(), e.getCause());
         }
-
+        attachFirestoreListener();
         return view;
+    }
+
+    private void followButton() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        updateCollection("Followers", userId, FirebaseAuth.getInstance().getUid());
+        updateCollection("Following", FirebaseAuth.getInstance().getUid(), userId);
+    }
+
+    private void updateCollection(String collectionName, String document, String value) {
+        updateCollection(collectionName, document, value, false);
+    }
+
+    private void updateCollection(String collectionName, String document, String value, boolean add) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection(collectionName).document(document).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                Map<String, Object> data = new HashMap<>();
+                List<String> list;
+                if (!task.isSuccessful()) {
+                    list = new ArrayList<>();
+                } else {
+                    if (task != null) {
+                        DocumentSnapshot documentSnapshot = task.getResult();
+
+                        data = documentSnapshot.getData();
+                    }
+                    if (data == null) {
+                        data = new HashMap<>();
+                    }
+                    list = (List<String>) data.getOrDefault(collectionName, new ArrayList<>());
+                    if (list == null) {
+                        list = new ArrayList<>();
+                    }
+                }
+                if(list.contains(value)) {
+                    list.remove(value);
+                    followButton.setText("Follow");
+                } else {
+                    list.add(value);
+                    followButton.setText("Un Follow");
+                }
+
+                Toast.makeText(getActivity().getApplicationContext(), "Follow", Toast.LENGTH_SHORT).show();
+                data.put(collectionName, list);
+                db.collection(collectionName).document(document).set(data, SetOptions.merge());
+            }
+        });
     }
 
     private void extractImage(StorageReference httpsReference) {
@@ -290,7 +349,7 @@ public class Profile extends Fragment {
 
                 for (DocumentChange documentChange : documentChanges) {
                     Pigeon pigeon = documentChange.getDocument().toObject(Pigeon.class);
-                    if(pigeon.getUserId().equals(userId)) {
+                    if (pigeon.getUserId().equals(userId)) {
                         pigeons.add(pigeon);
                     }
                 }
@@ -305,6 +364,116 @@ public class Profile extends Fragment {
                 recyclerView.setAdapter(postAdapter);
                 recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
                 recyclerView.getAdapter().notifyDataSetChanged();
+            }
+        });
+    }
+
+    private void attachFirestoreListener() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("Pigeons")
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot snapshots, @Nullable FirebaseFirestoreException e) {
+                        if (e != null) {
+                            // Handle the error
+                            return;
+                        }
+                        if (snapshots != null && !snapshots.isEmpty()) {
+                            getPigeons();
+                        }
+                    }
+                });
+        db.collection("Followers")
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot snapshots, @Nullable FirebaseFirestoreException e) {
+                        if (e != null) {
+                            // Handle the error
+                            return;
+                        }
+                        if (snapshots != null && !snapshots.isEmpty()) {
+                            setUpFollowers();
+                        }
+                    }
+                });
+        db.collection("Following")
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot snapshots, @Nullable FirebaseFirestoreException e) {
+                        if (e != null) {
+                            // Handle the error
+                            return;
+                        }
+                        if (snapshots != null && !snapshots.isEmpty()) {
+                            setUpFollowing();
+                        }
+                    }
+                });
+
+    }
+
+    private void setUpFollowers() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("Followers").document(userId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                Map<String, Object> data = new HashMap<>();
+                List<String> list;
+                if (!task.isSuccessful()) {
+                    list = new ArrayList<>();
+                } else {
+                    if (task != null) {
+                        DocumentSnapshot documentSnapshot = task.getResult();
+
+                        data = documentSnapshot.getData();
+                    }
+                    if (data == null) {
+                        data = new HashMap<>();
+                    }
+                    list = (List<String>) data.getOrDefault("Followers", new ArrayList<>());
+                    if (list == null) {
+                        list = new ArrayList<>();
+                    }
+                }
+                if(list.contains(FirebaseAuth.getInstance().getUid())){
+                    followButton.setText("Un Follow");
+                } else {
+                    followButton.setText("Follow");
+                }
+               // Set List size
+                TextView followingLabel = view.findViewById(R.id.profileFollowersTextView);
+                followingLabel.setText("Followers: " + list.size());
+
+            }
+        });
+    }
+
+    private void setUpFollowing() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("Following").document(userId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                Map<String, Object> data = new HashMap<>();
+                List<String> list;
+                if (!task.isSuccessful()) {
+                    list = new ArrayList<>();
+                } else {
+                    if (task != null) {
+                        DocumentSnapshot documentSnapshot = task.getResult();
+
+                        data = documentSnapshot.getData();
+                    }
+                    if (data == null) {
+                        data = new HashMap<>();
+                    }
+                    list = (List<String>) data.getOrDefault("Following", new ArrayList<>());
+                    if (list == null) {
+                        list = new ArrayList<>();
+                    }
+                }
+                // Set List size
+                TextView followingLabel = view.findViewById(R.id.profileFollowingTextView);
+                followingLabel.setText("Following: " + list.size());
             }
         });
     }

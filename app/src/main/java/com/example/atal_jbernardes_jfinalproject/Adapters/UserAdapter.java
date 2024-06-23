@@ -72,31 +72,31 @@ public class UserAdapter extends RecyclerView.Adapter<UserViewHolder> {
     }
 
     private void extractImage (StorageReference httpsReference, ImageView imageView) {
-        try {
-            httpsReference.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
-                @Override
-                public void onComplete(@NonNull Task<Uri> task) {
-                    Log.d("FriendHere", "third");
-                    task.addOnCompleteListener(new OnCompleteListener<Uri>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Uri> task) {
-                            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                            if (!task.isSuccessful() || task.getResult() == null) {
-                                StorageReference httpsReference = storage.getReferenceFromUrl(
-                                        "gs://pigeoner-a0dab.appspot.com/default.jpeg");
-                                extractImage(httpsReference, imageView);
-                                return;
-                            }
-                            imageView.setImageURI(task.getResult());
-                            Glide.with(imageView.getContext()).load(task.getResult()).into(imageView);
-                        }
-                    });
-                    Log.d("FriendHere", "fourth");
-                }
-            });
-        } catch (Exception e) {
-
-        }
+//        try {
+//            httpsReference.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+//                @Override
+//                public void onComplete(@NonNull Task<Uri> task) {
+//                    Log.d("FriendHere", "third");
+//                    task.addOnCompleteListener(new OnCompleteListener<Uri>() {
+//                        @Override
+//                        public void onComplete(@NonNull Task<Uri> task) {
+//                            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+//                            if (!task.isSuccessful() || task.getResult() == null) {
+//                                StorageReference httpsReference = storage.getReferenceFromUrl(
+//                                        "gs://pigeoner-a0dab.appspot.com/default.jpeg");
+//                                extractImage(httpsReference, imageView);
+//                                return;
+//                            }
+//                            imageView.setImageURI(task.getResult());
+//                            Glide.with(imageView.getContext()).load(task.getResult()).into(imageView);
+//                        }
+//                    });
+//                    Log.d("FriendHere", "fourth");
+//                }
+//            });
+//        } catch (Exception e) {
+//
+//        }
     }
 
     @Override

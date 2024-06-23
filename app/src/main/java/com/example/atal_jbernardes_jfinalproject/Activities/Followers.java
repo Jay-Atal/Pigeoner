@@ -38,7 +38,7 @@ public class Followers extends AppCompatActivity {
         });
 
         followersList = findViewById(R.id.followersList);
-        getFollowers();
+//        getFollowers();
     }
 
     private void getFollowers() {

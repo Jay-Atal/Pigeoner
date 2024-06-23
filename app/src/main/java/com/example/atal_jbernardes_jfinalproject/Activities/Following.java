@@ -38,7 +38,7 @@ public class Following extends AppCompatActivity {
         });
 
         followingList = findViewById(R.id.followingList);
-        getFollowing();
+//        getFollowing();
     }
 
     private void getFollowing() {
