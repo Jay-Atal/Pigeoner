@@ -259,7 +259,7 @@ public class Profile extends Fragment {
                     followButton.setText("Follow");
                 } else {
                     list.add(value);
-                    followButton.setText("Un Follow");
+                    followButton.setText("Unfollow");
                 }
                 data.put(collectionName, list);
                 db.collection(collectionName).document(document).set(data, SetOptions.merge());
@@ -503,7 +503,7 @@ public class Profile extends Fragment {
                     }
                 }
                 if (list.contains(FirebaseAuth.getInstance().getUid())) {
-                    followButton.setText("Un Follow");
+                    followButton.setText("Unfollow");
                 } else {
                     followButton.setText("Follow");
                 }
