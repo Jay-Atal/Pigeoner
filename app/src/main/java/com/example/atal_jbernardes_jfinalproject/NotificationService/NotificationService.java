@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -34,7 +35,6 @@ public class NotificationService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startID) {
         getFollowers();
-        attachFirestoreListener();
         return START_STICKY;
     }
 
@@ -95,6 +95,7 @@ public class NotificationService extends Service {
                     }
                 }
                 followers = list;
+                attachFirestoreListener();
             }
         });
 

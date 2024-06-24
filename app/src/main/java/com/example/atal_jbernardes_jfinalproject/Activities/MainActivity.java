@@ -38,8 +38,7 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-        Intent serviceIntent = new Intent(this, NotificationService.class);
-        startService(serviceIntent);
+
 
         BroadcastReceiver receiver = new NotificationReceiver();
         IntentFilter filter = new IntentFilter();
@@ -82,5 +81,6 @@ public class MainActivity extends AppCompatActivity {
         } else {
             setContentView(R.layout.activity_main);
         }
+
     }
 }
