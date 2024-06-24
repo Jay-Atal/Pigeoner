@@ -54,11 +54,11 @@ public class SignUp extends AppCompatActivity {
         boolean useDarkMode = appPreferences.getBoolean("DARK_MODE", false);
 
         Log.v("THEME_MODE_SIGNUP", "" + useDarkMode);
-        if (useDarkMode) {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-        } else {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-        }
+//        if (useDarkMode) {
+//            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+//        } else {
+//            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+//        }
 
         mAuth = FirebaseAuth.getInstance();
         username = findViewById(R.id.emailField);

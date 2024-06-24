@@ -102,11 +102,11 @@ public class Explore extends Fragment {
         boolean useDarkMode = appPreferences.getBoolean("DARK_MODE", false);
         Log.v("THEME_MODE_EXPLORE", ""+useDarkMode);
 
-        if (useDarkMode) {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-        } else {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-        }
+//        if (useDarkMode) {
+//            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+//        } else {
+//            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+//        }
 
         recyclerView = view.findViewById(R.id.exploreRecyclerView);
         pigeons = new ArrayList<>();

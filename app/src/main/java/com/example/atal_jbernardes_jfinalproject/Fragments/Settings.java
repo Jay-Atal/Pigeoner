@@ -83,10 +83,10 @@ public class Settings extends Fragment {
 
         if (useDarkMode) {
             changeThemeButton.setText("Change Theme to Light Mode");
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+//            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
         } else {
             changeThemeButton.setText("Change Theme to Dark Mode");
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+//            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         }
 
         changeThemeButton.setOnClickListener(new View.OnClickListener() {

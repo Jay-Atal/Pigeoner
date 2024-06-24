@@ -50,13 +50,13 @@ public class SignIn extends AppCompatActivity {
         SharedPreferences appPreferences = getSharedPreferences("com.example.atal_jbernardes_jfinalproject",
                 Context.MODE_PRIVATE);
         boolean useDarkMode = appPreferences.getBoolean("DARK_MODE", false);
-        Log.v("THEME_MODE_SIGNIN", ""+useDarkMode);
-
-        if (useDarkMode) {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-        } else {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-        }
+//        Log.v("THEME_MODE_SIGNIN", ""+useDarkMode);
+//
+//        if (useDarkMode) {
+//            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+//        } else {
+//            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+//        }
 
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
@@ -81,6 +81,7 @@ public class SignIn extends AppCompatActivity {
         signup.setOnClickListener(v->{
             Intent intent = new Intent(SignIn.this, SignUp.class);
             startActivity(intent);
+            finish();
         });
     }
 
@@ -133,6 +134,7 @@ public class SignIn extends AppCompatActivity {
         Intent intent = new Intent(SignIn.this, TabActivity.class);
         startActivity(intent);
         finish();
+        return;
     }
 
 

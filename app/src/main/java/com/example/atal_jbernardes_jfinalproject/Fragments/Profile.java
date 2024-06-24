@@ -158,11 +158,11 @@ public class Profile extends Fragment {
         boolean useDarkMode = appPreferences.getBoolean("DARK_MODE", false);
         Log.v("THEME_MODE_PROFILE", ""+useDarkMode);
 
-        if (useDarkMode) {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-        } else {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-        }
+//        if (useDarkMode) {
+//            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+//        } else {
+//            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+//        }
 
         imageView = view.findViewById(R.id.imageView);
         nameField = view.findViewById(R.id.profileUsernameTextView);

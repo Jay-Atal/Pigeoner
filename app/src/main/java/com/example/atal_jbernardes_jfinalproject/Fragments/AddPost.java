@@ -94,11 +94,11 @@ public class AddPost extends Fragment {
         boolean useDarkMode = appPreferences.getBoolean("DARK_MODE", false);
         Log.v("THEME_MODE_ADD_POST", ""+useDarkMode);
 
-        if (useDarkMode) {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-        } else {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-        }
+//        if (useDarkMode) {
+//            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+//        } else {
+//            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+//        }
 
         sentButton = view.findViewById(R.id.sendButton);
         content = view.findViewById(R.id.postDetailsEditText);

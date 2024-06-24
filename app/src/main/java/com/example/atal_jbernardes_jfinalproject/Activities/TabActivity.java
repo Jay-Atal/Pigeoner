@@ -37,17 +37,18 @@ public class TabActivity extends AppCompatActivity {
         boolean useDarkMode = appPreferences.getBoolean("DARK_MODE", false);
         Log.v("THEME_MODE_TAB_ACTIVITY", ""+useDarkMode);
 
-        if (useDarkMode) {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-        } else {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-        }
+//        if (useDarkMode) {
+//            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+//        } else {
+//            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+//        }
 
         tabLayout = findViewById(R.id.tabLayout); //fix issue with not finding id
         viewPager2 = findViewById(R.id.viewPager2);
         viewPagerAdapter = new ViewPagerAdapter(this); //fix issue with not finding id
         viewPager2.setOffscreenPageLimit(5);
         viewPager2.setAdapter(viewPagerAdapter);
+
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -72,5 +73,6 @@ public class TabActivity extends AppCompatActivity {
                 tabLayout.getTabAt(position).select();
             }
         });
+
     }
 }

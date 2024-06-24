@@ -21,10 +21,12 @@ import com.google.firebase.firestore.FirebaseFirestoreSettings;
 
 public class MainActivity extends AppCompatActivity {
     ImageView appLogo;
+    private static boolean isHandlerExecuted = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
+
         setContentView(R.layout.activity_main);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -35,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences appPreferences = getSharedPreferences("com.example.atal_jbernardes_jfinalproject",
                 Context.MODE_PRIVATE);
         boolean useDarkMode = appPreferences.getBoolean("DARK_MODE", false);
-        Log.v("THEME_MODE_MAIN_ACTIVITY", ""+useDarkMode);
+        Log.v("THEME_MODE_MAIN_ACTIVITY", "" + useDarkMode);
 
         if (useDarkMode) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
@@ -43,22 +45,30 @@ public class MainActivity extends AppCompatActivity {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         }
 
+        Handler handler = new Handler();
         appLogo = findViewById(R.id.splashScreenImage);
         appLogo.setImageResource(R.drawable.pigoneer_logo);
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
-                .setPersistenceEnabled(true)
-                .build();
-        db.setFirestoreSettings(settings);
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Intent intent = new Intent(MainActivity.this, SignIn.class);
-                startActivity(intent);
-                finish();
-            }
-        }, 2000);
+        if (!isHandlerExecuted) {
+            isHandlerExecuted = true;
 
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+
+
+                    FirebaseFirestore db = FirebaseFirestore.getInstance();
+                    FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
+                            .setPersistenceEnabled(true)
+                            .build();
+                    db.setFirestoreSettings(settings);
+                    setContentView(R.layout.activity_main);
+                    Intent intent = new Intent(MainActivity.this, SignIn.class);
+                    startActivity(intent);
+                    finish();
+                }
+            }, 2000);
+        } else {
+            setContentView(R.layout.activity_main);
+        }
     }
 }
