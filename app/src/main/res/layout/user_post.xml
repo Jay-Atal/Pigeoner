@@ -88,7 +88,19 @@
             android:layout_weight="0.5" />
 
         <Button
-            android:id="@+id/replyButton"
+            android:id="@+id/repliesButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Replies" />
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5" />
+
+        <Button
+            android:id="@+id/commentButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"

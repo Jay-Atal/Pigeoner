@@ -2,6 +2,7 @@ package com.example.atal_jbernardes_jfinalproject.Adapters;
 
 import static androidx.core.content.ContextCompat.startActivity;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
@@ -17,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.atal_jbernardes_jfinalproject.Activities.ProfileActivity;
+import com.example.atal_jbernardes_jfinalproject.Activities.Replies;
 import com.example.atal_jbernardes_jfinalproject.Elements.Pigeon;
 import com.example.atal_jbernardes_jfinalproject.Elements.User;
 import com.example.atal_jbernardes_jfinalproject.R;
@@ -87,6 +90,46 @@ public class PostAdapter extends RecyclerView.Adapter<PostViewHolder> {
         holder.likeButton.setOnClickListener(v -> {
             updatePostLikeCollection("Likes", currentPost.getPigeonId(), FirebaseAuth.getInstance().getUid(), holder.likeButton);
             updateUserLikeCollection("LikesByUser", FirebaseAuth.getInstance().getUid(), currentPost.getPigeonId());
+        });
+
+        holder.repliesButton.setOnClickListener(v -> {
+            Intent intent = new Intent(holder.repliesButton.getContext(), Replies.class);
+            intent.putExtra("parentId", currentPost.getPigeonId());
+            startActivity(holder.repliesButton.getContext(), intent, new Bundle());
+        });
+
+        holder.commentButton.setOnClickListener(v -> {
+            LayoutInflater inflater = LayoutInflater.from(holder.commentButton.getContext());
+            View dialogLayout = inflater.inflate(R.layout.add_reply, null);
+            final AlertDialog dialog = new AlertDialog.Builder(holder.commentButton.getContext())
+                    .setView(dialogLayout)
+                    .setTitle("Add Reply")
+                    .setPositiveButton("Send", null) //Set to null. We override the onclick
+                    .setNegativeButton(android.R.string.cancel, null)
+                    .create();
+            EditText contentField;
+            contentField = dialogLayout.findViewById(R.id.contentField);
+
+            dialog.setOnShowListener(dialog1 -> {
+                Button ok = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                ok.setOnClickListener(v2 -> {
+                    Pigeon reply = new Pigeon(FirebaseAuth.getInstance().getUid(), contentField.getText().toString());
+                    reply.setParentId(currentPost.getPigeonId());
+                    db.collection("Pigeons").add(reply).addOnCompleteListener(task -> {
+                        if(!task.isSuccessful()) {
+                            return;
+                        }
+                        DocumentReference documentReference1 = task.getResult();
+                        reply.setPigeonId(documentReference1.getId());
+                        db.collection("Pigeons").document(documentReference1.getId()).set(reply, SetOptions.merge()).addOnCompleteListener(task1 -> {
+                            dialog.dismiss();
+                            holder.repliesButton.callOnClick();
+                        });
+                    });
+
+                });
+            });
+            dialog.show();
         });
 
         StorageReference httpsReference;

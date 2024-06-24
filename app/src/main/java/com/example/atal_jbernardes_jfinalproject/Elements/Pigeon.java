@@ -6,6 +6,16 @@ public class Pigeon {
 
     private String pigeonId;
 
+    public String getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(String parentId) {
+        this.parentId = parentId;
+    }
+
+    private String parentId = null;
+
     public Pigeon(){
 
     }
