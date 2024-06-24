@@ -18,14 +18,19 @@ import com.example.atal_jbernardes_jfinalproject.Elements.Pigeon;
 import com.example.atal_jbernardes_jfinalproject.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -48,6 +53,7 @@ public class LikedPosts extends Fragment {
     private List<String> likes;
 
     private boolean onLaunch;
+    private boolean onLaunch2;
 
     private PostAdapter postAdapter;
 
@@ -90,9 +96,43 @@ public class LikedPosts extends Fragment {
         recyclerView = view.findViewById(R.id.likedPostList);
         pigeons = new ArrayList<>();
         onLaunch = true;
-        getPigeons();
+        onLaunch2 = true;
+        getLikes(true);
         return view;
     }
+
+    public void getLikes(boolean getPigeons) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("LikesByUser").document(FirebaseAuth.getInstance().getUid()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                Map<String, Object> data = new HashMap<>();
+                List<String> list;
+                if (!task.isSuccessful()) {
+                    list = new ArrayList<>();
+                } else {
+                    if (task != null) {
+                        DocumentSnapshot documentSnapshot = task.getResult();
+
+                        data = documentSnapshot.getData();
+                    }
+                    if (data == null) {
+                        data = new HashMap<>();
+                    }
+                    list = (List<String>) data.getOrDefault("LikesByUser", new ArrayList<>());
+                    if (list == null) {
+                        list = new ArrayList<>();
+                    }
+                }
+                likes = list;
+                if(getPigeons) {
+                    getPigeons();
+                }
+            }
+        });
+
+    }
+
 
     private void getPigeons() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -107,14 +147,14 @@ public class LikedPosts extends Fragment {
 
                 for (DocumentChange documentChange : documentChanges) {
                     Pigeon pigeon = documentChange.getDocument().toObject(Pigeon.class);
-                    if(pigeon.getParentId() == null) {
+                    if(likes.contains(pigeon.getPigeonId())) {
                         pigeons.add(pigeon);
                     }
                 }
 
                 postAdapter = new PostAdapter(pigeons);
                 recyclerView.setAdapter(postAdapter);
-                recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+                recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));;
                 recyclerView.getAdapter().notifyDataSetChanged();
                 attachFirestoreListener();
             }
@@ -145,7 +185,7 @@ public class LikedPosts extends Fragment {
                                     case MODIFIED:
                                         Log.d("Explore", documentChange.getDocument().toString());
                                         Pigeon currentPigeon = documentChange.getDocument().toObject(Pigeon.class);
-                                        if(currentPigeon.getParentId() != null) {
+                                        if(!likes.contains(currentPigeon.getPigeonId())) {
                                             return;
                                         }
                                         int pigeonIndex = getPigeonIndex(currentPigeon.getPigeonId());
@@ -164,6 +204,39 @@ public class LikedPosts extends Fragment {
                         }
                     }
                 });
+        db.collection("LikesByUser").document(FirebaseAuth.getInstance().getUid()).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                if(onLaunch2) {
+                    onLaunch2 = false;
+                    return;
+                }
+                Map<String, Object> data = value.getData();
+                if(data == null){
+                    return;
+                }
+                List<String> newLikes = (List<String>) data.get("LikesByUser");
+                Log.d("NewLiks", newLikes.toString());
+                if(newLikes.size() > likes.size()) {
+                    likes = newLikes;
+                } else {
+                    List<String> removed = new ArrayList<>(likes);
+                    removed.removeAll(newLikes);
+                    Log.d("removed", removed.toString());
+                    Log.d("removed", pigeons.toString());
+                    for(int i = pigeons.size() - 1; i >= 0; i--) {
+                        Log.d("removed1", pigeons.get(i).getPigeonId());
+                        if(removed.contains(pigeons.get(i).getPigeonId())){
+                            Log.d("removed", pigeons.toString());
+                            pigeons.remove(i);
+                            postAdapter.notifyItemRemoved(i);
+                        }
+                    }
+                    likes.removeAll(removed);
+                }
+                postAdapter.update();
+            }
+        });
     }
     private int getPigeonIndex(String id) {
         for(int i = 0; i < pigeons.size(); i++) {

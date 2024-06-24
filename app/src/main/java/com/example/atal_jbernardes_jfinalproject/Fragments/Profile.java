@@ -398,7 +398,7 @@ public class Profile extends Fragment {
                                     case MODIFIED:
                                         Log.d("Explore", documentChange.getDocument().toString());
                                         Pigeon currentPigeon = documentChange.getDocument().toObject(Pigeon.class);
-                                        if (!profileUser.getUserId().equals(userId)) {
+                                        if (!currentPigeon.getUserId().equals(userId)) {
                                             return;
                                         }
                                         int pigeonIndex = getPigeonIndex(currentPigeon.getPigeonId());

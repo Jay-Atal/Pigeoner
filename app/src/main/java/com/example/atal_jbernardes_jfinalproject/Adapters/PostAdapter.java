@@ -66,7 +66,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostViewHolder> {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference documentReference = db.collection("Users").document(
                 currentPost.getUserId());
-        holder.likeButton.setText((likesByUser.contains(currentPost.getPigeonId())) ? "Un Like" : "Like");
+        holder.likeButton.setText((likesByUser.contains(currentPost.getPigeonId())) ? "Unlike" : "Like");
         documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -217,7 +217,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostViewHolder> {
                 } else {
                     list.add(value);
                     added = true;
-                    likeButton.setText("Un Like");
+                    likeButton.setText("Unlike");
                 }
                 db.collection("Pigeons").document(document).get().addOnCompleteListener(task1 -> {
                     if (!task1.isSuccessful()) {
