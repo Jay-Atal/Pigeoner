@@ -117,12 +117,6 @@ public class Explore extends Fragment {
                 }
 
                 postAdapter = new PostAdapter(pigeons);
-                pigeons.sort(new Comparator<Pigeon>() {
-                    @Override
-                    public int compare(Pigeon o1, Pigeon o2) {
-                        return o2.getTimestamp().compareTo(o1.getTimestamp());
-                    }
-                });
                 recyclerView.setAdapter(postAdapter);
                 recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
                 recyclerView.getAdapter().notifyDataSetChanged();

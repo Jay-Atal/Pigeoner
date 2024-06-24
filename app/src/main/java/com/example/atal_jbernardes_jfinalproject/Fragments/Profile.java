@@ -94,7 +94,7 @@ public class Profile extends Fragment {
 
     private boolean onLaunch;
     RecyclerView recyclerView;
-
+    private PostAdapter postAdapter;
 
     TextView nameField, bioField;
 
@@ -157,7 +157,6 @@ public class Profile extends Fragment {
         getPigeons();
 
 
-
         followButton = view.findViewById(R.id.followButton);
         if (userId.equals(FirebaseAuth.getInstance().getUid())) {
             followButton.setVisibility(View.GONE);
@@ -172,11 +171,11 @@ public class Profile extends Fragment {
 
         followers = view.findViewById(R.id.profileFollowersTextView);
         followers.setOnClickListener(v -> {
-                //TODO make sure connection is correct
-                Intent followersPage = new Intent(getContext(), Followers.class);
-                followersPage.putExtra("userId", userId);
-                startActivity(followersPage, new Bundle());
-            });
+            //TODO make sure connection is correct
+            Intent followersPage = new Intent(getContext(), Followers.class);
+            followersPage.putExtra("userId", userId);
+            startActivity(followersPage, new Bundle());
+        });
 
         following = view.findViewById(R.id.profileFollowingTextView);
         following.setOnClickListener(v -> {
@@ -239,7 +238,7 @@ public class Profile extends Fragment {
                         list = new ArrayList<>();
                     }
                 }
-                if(list.contains(value)) {
+                if (list.contains(value)) {
                     list.remove(value);
                     followButton.setText("Follow");
                 } else {
@@ -362,7 +361,7 @@ public class Profile extends Fragment {
                     }
                 }
 
-                PostAdapter postAdapter = new PostAdapter(pigeons);
+                postAdapter = new PostAdapter(pigeons);
                 pigeons.sort(new Comparator<Pigeon>() {
                     @Override
                     public int compare(Pigeon o1, Pigeon o2) {
@@ -387,11 +386,11 @@ public class Profile extends Fragment {
                             return;
                         }
                         if (snapshots != null && !snapshots.isEmpty()) {
-                            if(onLaunch) {
+                            if (onLaunch) {
                                 onLaunch = false;
                                 return;
                             }
-                            for (DocumentChange documentChange: snapshots.getDocumentChanges())
+                            for (DocumentChange documentChange : snapshots.getDocumentChanges())
                                 switch (documentChange.getType()) {
                                     case ADDED:
 
@@ -399,14 +398,19 @@ public class Profile extends Fragment {
                                     case MODIFIED:
                                         Log.d("Explore", documentChange.getDocument().toString());
                                         Pigeon currentPigeon = documentChange.getDocument().toObject(Pigeon.class);
+                                        if (!profileUser.getUserId().equals(userId)) {
+                                            return;
+                                        }
                                         int pigeonIndex = getPigeonIndex(currentPigeon.getPigeonId());
-                                        if(pigeonIndex == -1) {
+                                        if (pigeonIndex == -1) {
                                             pigeons.add(0, currentPigeon);
                                         } else {
                                             pigeons.remove(pigeonIndex);
                                             pigeons.add(pigeonIndex, currentPigeon);
+                                            postAdapter.update();
                                         }
-                                        recyclerView.getAdapter().notifyDataSetChanged();
+
+
                                         break;
                                     case REMOVED:
 
@@ -480,12 +484,12 @@ public class Profile extends Fragment {
                         list = new ArrayList<>();
                     }
                 }
-                if(list.contains(FirebaseAuth.getInstance().getUid())){
+                if (list.contains(FirebaseAuth.getInstance().getUid())) {
                     followButton.setText("Un Follow");
                 } else {
                     followButton.setText("Follow");
                 }
-               // Set List size
+                // Set List size
                 TextView followingLabel = view.findViewById(R.id.profileFollowersTextView);
                 followingLabel.setText("Followers: " + list.size());
 
@@ -523,7 +527,7 @@ public class Profile extends Fragment {
         });
     }
 
-    private void  showNameBioDialog () {
+    private void showNameBioDialog() {
         LayoutInflater inflater = getLayoutInflater();
         View dialogLayout = inflater.inflate(R.layout.name_bio_dialog, null);
         final AlertDialog dialog = new AlertDialog.Builder(getContext())
@@ -550,9 +554,9 @@ public class Profile extends Fragment {
     }
 
     private int getPigeonIndex(String id) {
-        for(int i = 0; i < pigeons.size(); i++) {
+        for (int i = 0; i < pigeons.size(); i++) {
             Pigeon currentPigeon = pigeons.get(i);
-            if(currentPigeon.getPigeonId().equals(id)) {
+            if (currentPigeon.getPigeonId().equals(id)) {
                 return i;
             }
         }
