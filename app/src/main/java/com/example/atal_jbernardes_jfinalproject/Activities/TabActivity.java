@@ -2,18 +2,22 @@ package com.example.atal_jbernardes_jfinalproject.Activities;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.atal_jbernardes_jfinalproject.Adapters.ViewPagerAdapter;
+import android.Manifest;
 import com.example.atal_jbernardes_jfinalproject.R;
 import com.google.android.material.tabs.TabLayout;
 
@@ -42,6 +46,14 @@ public class TabActivity extends AppCompatActivity {
 //        } else {
 //            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
 //        }
+
+        if (ContextCompat.checkSelfPermission(TabActivity.this,
+                Manifest.permission.POST_NOTIFICATIONS) !=
+                PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(TabActivity.this,
+                    new String[]{Manifest.permission.POST_NOTIFICATIONS}, 101);
+        }
 
         tabLayout = findViewById(R.id.tabLayout); //fix issue with not finding id
         viewPager2 = findViewById(R.id.viewPager2);
