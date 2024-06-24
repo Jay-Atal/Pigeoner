@@ -47,7 +47,7 @@ public class SignIn extends AppCompatActivity {
             return insets;
         });
 
-        SharedPreferences appPreferences = getSharedPreferences("com.example.atal_jbernardes_jfinalproject.Activities",
+        SharedPreferences appPreferences = getSharedPreferences("com.example.atal_jbernardes_jfinalproject",
                 Context.MODE_PRIVATE);
         boolean useDarkMode = appPreferences.getBoolean("DARK_MODE", false);
         Log.v("THEME_MODE_SIGNIN", ""+useDarkMode);
@@ -57,6 +57,7 @@ public class SignIn extends AppCompatActivity {
         } else {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         }
+
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if(currentUser != null){
