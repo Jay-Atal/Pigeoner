@@ -1,9 +1,12 @@
 package com.example.atal_jbernardes_jfinalproject.Fragments;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -93,6 +96,18 @@ public class LikedPosts extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_liked_posts, container, false);
+
+        SharedPreferences appPreferences = getActivity().getSharedPreferences(
+                "com.example.atal_jbernardes_jfinalproject", Context.MODE_PRIVATE);
+        boolean useDarkMode = appPreferences.getBoolean("DARK_MODE", false);
+        Log.v("THEME_MODE_LIKED_POSTS", ""+useDarkMode);
+
+        if (useDarkMode) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        }
+
         recyclerView = view.findViewById(R.id.likedPostList);
         pigeons = new ArrayList<>();
         onLaunch = true;

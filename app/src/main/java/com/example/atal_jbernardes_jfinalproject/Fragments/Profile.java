@@ -3,14 +3,17 @@ package com.example.atal_jbernardes_jfinalproject.Fragments;
 import static android.app.Activity.RESULT_OK;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -148,6 +151,18 @@ public class Profile extends Fragment {
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
         view = inflater.inflate(R.layout.fragment_profile, container, false);
+
+        SharedPreferences appPreferences = getActivity().getSharedPreferences(
+                "com.example.atal_jbernardes_jfinalproject", Context.MODE_PRIVATE);
+        boolean useDarkMode = appPreferences.getBoolean("DARK_MODE", false);
+        Log.v("THEME_MODE_PROFILE", ""+useDarkMode);
+
+        if (useDarkMode) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        }
+
         imageView = view.findViewById(R.id.imageView);
         nameField = view.findViewById(R.id.profileUsernameTextView);
         bioField = view.findViewById(R.id.profileBioTextView);

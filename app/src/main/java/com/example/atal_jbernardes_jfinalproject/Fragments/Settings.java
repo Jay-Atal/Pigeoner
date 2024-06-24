@@ -1,10 +1,14 @@
 package com.example.atal_jbernardes_jfinalproject.Fragments;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,7 +34,7 @@ public class Settings extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-
+    private Button changeThemeButton;
     private Button signOut;
 
     public Settings() {
@@ -69,6 +73,29 @@ public class Settings extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
+
+        changeThemeButton = view.findViewById(R.id.changeThemeButton);
+
+        SharedPreferences appPreferences = getActivity().getSharedPreferences(
+                "com.example.atal_jbernardes_jfinalproject", Context.MODE_PRIVATE);
+        boolean useDarkMode = appPreferences.getBoolean("DARK_MODE", false);
+        Log.v("THEME_MODE_SETTINGS", ""+useDarkMode);
+
+        if (useDarkMode) {
+            changeThemeButton.setText("Change Theme to Light Mode");
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        } else {
+            changeThemeButton.setText("Change Theme to Dark Mode");
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        }
+
+        changeThemeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                changeTheme();
+            }
+        });
+
         signOut = view.findViewById(R.id.signOut);
         signOut.setOnClickListener(v -> {
             FirebaseAuth.getInstance().signOut();
@@ -76,5 +103,23 @@ public class Settings extends Fragment {
             startActivity(intent);
         });
         return view;
+    }
+
+    private void changeTheme() {
+        SharedPreferences appPreferences = getActivity().getSharedPreferences(
+                "com.example.atal_jbernardes_jfinalproject", Context.MODE_PRIVATE);
+        boolean useDarkMode = appPreferences.getBoolean("DARK_MODE", false);
+        SharedPreferences.Editor editor = appPreferences.edit();
+        editor.putBoolean("DARK_MODE", !useDarkMode);
+        Log.v("THEME_MODE_CHANGE", ""+ useDarkMode);
+        editor.apply();
+        useDarkMode = appPreferences.getBoolean("DARK_MODE", true);
+
+
+        if (useDarkMode) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        }
     }
 }

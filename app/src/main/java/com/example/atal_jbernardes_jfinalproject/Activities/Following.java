@@ -1,11 +1,14 @@
 package com.example.atal_jbernardes_jfinalproject.Activities;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -40,6 +43,18 @@ public class Following extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        SharedPreferences appPreferences = getSharedPreferences("com.example.atal_jbernardes_jfinalproject",
+                Context.MODE_PRIVATE);
+        boolean useDarkMode = appPreferences.getBoolean("DARK_MODE", false);
+        Log.v("THEME_MODE_FOLLOWING", ""+useDarkMode);
+
+        if (useDarkMode) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        }
+
         Bundle bundle = getIntent().getExtras();
         userId = bundle.getString("userId");
         followingList = findViewById(R.id.followingList);
