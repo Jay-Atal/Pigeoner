@@ -2,7 +2,9 @@ package com.example.atal_jbernardes_jfinalproject.Adapters;
 
 import static androidx.core.content.ContextCompat.startActivity;
 
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -170,7 +172,9 @@ public class PostAdapter extends RecyclerView.Adapter<PostViewHolder> {
                                 return;
                             }
                             imageView.setImageURI(task.getResult());
-                            Glide.with(imageView.getContext()).load(task.getResult()).into(imageView);
+                            if(isValidContextForGlide(imageView.getContext())) {
+                                Glide.with(imageView.getContext()).load(task.getResult()).into(imageView);
+                            }
 //                            Glide.with(getActivity().getApplicationContext()).load(task.getResult()).into(imageView);
 //                                   Picasso.get().load(task.getResult()).into(imageView);
 //                            Picasso.with()
@@ -312,6 +316,20 @@ public class PostAdapter extends RecyclerView.Adapter<PostViewHolder> {
         });
 
     }
+
+    public static boolean isValidContextForGlide(final Context context) {
+        if (context == null) {
+            return false;
+        }
+        if (context instanceof Activity) {
+            final Activity activity = (Activity) context;
+            if (activity.isDestroyed() || activity.isFinishing()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
 
 
     @Override
