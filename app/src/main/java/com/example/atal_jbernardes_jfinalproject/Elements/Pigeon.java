@@ -4,6 +4,8 @@ import java.util.Date;
 
 public class Pigeon {
 
+    private String pigeonId;
+
     public Pigeon(){
 
     }
@@ -53,4 +55,11 @@ public class Pigeon {
     }
 
 
+    public String getPigeonId() {
+        return pigeonId;
+    }
+
+    public void setPigeonId(String pigeonId) {
+        this.pigeonId = pigeonId;
+    }
 }

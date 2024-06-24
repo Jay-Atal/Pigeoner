@@ -18,9 +18,11 @@ import com.example.atal_jbernardes_jfinalproject.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
 
 import java.util.ArrayList;
@@ -104,6 +106,15 @@ public class AddPost extends Fragment {
                 DocumentReference documentReference = task.getResult();
                 String pigeonId = documentReference.getId();
                 updatePigeonsList(pigeonId);
+                db.collection("Pigeons").document(pigeonId).get().addOnCompleteListener(task1 -> {
+                    if(!task1.isSuccessful()){
+
+                    }
+                    DocumentSnapshot documentSnapshot = task1.getResult();
+                    Pigeon pigeon1 = documentSnapshot.toObject(Pigeon.class);
+                    pigeon1.setPigeonId(pigeonId);
+                    db.collection("Pigeons").document(pigeonId).set(pigeon1, SetOptions.merge());
+                });
             }
         });
     }

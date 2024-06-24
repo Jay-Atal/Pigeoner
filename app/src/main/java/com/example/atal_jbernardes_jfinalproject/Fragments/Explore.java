@@ -3,10 +3,12 @@ package com.example.atal_jbernardes_jfinalproject.Fragments;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +19,10 @@ import com.example.atal_jbernardes_jfinalproject.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
@@ -80,6 +85,7 @@ public class Explore extends Fragment {
         View view = inflater.inflate(R.layout.fragment_explore, container, false);
         recyclerView = view.findViewById(R.id.exploreRecyclerView);
         getPigeons();
+        attachFirestoreListener();
         return view;
     }
 
@@ -112,5 +118,24 @@ public class Explore extends Fragment {
                 recyclerView.getAdapter().notifyDataSetChanged();
             }
         });
+    }
+
+    private void attachFirestoreListener() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("Pigeons")
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot snapshots, @Nullable FirebaseFirestoreException e) {
+                        if (e != null) {
+                            // Handle the error
+                            return;
+                        }
+                        if (snapshots != null && !snapshots.isEmpty()) {
+                            for (QueryDocumentSnapshot snaptshot: snapshots)
+                                Log.d("Explore", snaptshot.toString());
+                            getPigeons();
+                        }
+                    }
+                });
     }
 }

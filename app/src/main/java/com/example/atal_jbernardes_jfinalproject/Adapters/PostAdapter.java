@@ -9,7 +9,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -21,13 +23,18 @@ import com.example.atal_jbernardes_jfinalproject.Elements.User;
 import com.example.atal_jbernardes_jfinalproject.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class PostAdapter extends RecyclerView.Adapter<PostViewHolder> {
     private List<Pigeon> myPosts;
@@ -72,6 +79,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostViewHolder> {
             intent.putExtra("userId", currentPost.getUserId());
             startActivity(holder.userAccountInfo.getContext(), intent, new Bundle());
         });
+
+        holder.likeButton.setOnClickListener(v-> updateCollection("Likes", currentPost.getPigeonId(), FirebaseAuth.getInstance().getUid(), holder.likeButton));
 
         StorageReference httpsReference;
         try {
@@ -125,6 +134,65 @@ public class PostAdapter extends RecyclerView.Adapter<PostViewHolder> {
         } catch (Exception e) {
 
         }
+    }
+
+    private void updateCollection(String collectionName, String document, String value, Button likeButton) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection(collectionName).document(document).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                Map<String, Object> data = new HashMap<>();
+                List<String> list;
+                if (!task.isSuccessful()) {
+                    list = new ArrayList<>();
+                } else {
+                    if (task != null) {
+                        DocumentSnapshot documentSnapshot = task.getResult();
+
+                        data = documentSnapshot.getData();
+                    }
+                    if (data == null) {
+                        data = new HashMap<>();
+                    }
+                    list = (List<String>) data.getOrDefault(collectionName, new ArrayList<>());
+                    if (list == null) {
+                        list = new ArrayList<>();
+                    }
+                }
+                boolean added;
+                if(list.contains(value)) {
+                    added = false;
+                    list.remove(value);
+                    likeButton.setText("Like");
+                } else {
+                    list.add(value);
+                    added = true;
+                    likeButton.setText("Un Like");
+                }
+                db.collection("Pigeons").document(document).get().addOnCompleteListener(task1 -> {
+                    if(!task1.isSuccessful()){
+                        return;
+                    }
+                    DocumentSnapshot documentSnapshot = task1.getResult();
+                    Pigeon pigeon1 = documentSnapshot.toObject(Pigeon.class);
+                    if(pigeon1 == null){
+                        Log.d("PostAdapter", "pigeon is null" + document);
+                        return;
+                    }
+                    int like =  pigeon1.getLikeCount();
+                    if(added) {
+                        like++;
+                    } else {
+                        like--;
+                    }
+                    pigeon1.setLikeCount(like);
+                    db.collection("Pigeons").document(document).set(pigeon1, SetOptions.merge());
+                });
+
+                data.put(collectionName, list);
+                db.collection(collectionName).document(document).set(data, SetOptions.merge());
+            }
+        });
     }
 
 

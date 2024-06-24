@@ -12,6 +12,8 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.atal_jbernardes_jfinalproject.R;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreSettings;
 
 public class MainActivity extends AppCompatActivity {
     ImageView appLogo;
@@ -27,7 +29,11 @@ public class MainActivity extends AppCompatActivity {
         });
         appLogo = findViewById(R.id.splashScreenImage);
         appLogo.setImageResource(R.drawable.pigoneer_logo);
-
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
+                .setPersistenceEnabled(true)
+                .build();
+        db.setFirestoreSettings(settings);
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override

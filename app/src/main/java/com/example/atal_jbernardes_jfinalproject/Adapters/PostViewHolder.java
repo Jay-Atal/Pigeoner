@@ -1,6 +1,7 @@
 package com.example.atal_jbernardes_jfinalproject.Adapters;
 
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -17,6 +18,7 @@ public class PostViewHolder extends RecyclerView.ViewHolder {
     TextView likeCount;
     TextView postDate;
     View userAccountInfo;
+    Button likeButton;
     public PostViewHolder(@NonNull View itemView) {
         super(itemView);
         username = itemView.findViewById(R.id.userUsernameTextView);
@@ -25,5 +27,6 @@ public class PostViewHolder extends RecyclerView.ViewHolder {
         likeCount = itemView.findViewById(R.id.likeCountTextView);
         postDate = itemView.findViewById(R.id.timeStampTextView);
         userAccountInfo = itemView.findViewById(R.id.userAccountInfo);
+        likeButton = itemView.findViewById(R.id.likeButton);
     }
 }
