@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    style="@style/SCREEN"
     android:orientation="vertical">
 
     <Space
@@ -16,6 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
+        style="@style/SCREEN"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
@@ -31,6 +33,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="0"
+            style="@style/TEXT"
             android:text="Username"
             android:textAlignment="center"
             android:textSize="30sp"
@@ -42,6 +45,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
+        style="@style/TEXT"
         android:text="Post Info"
         android:textAlignment="textStart"
         android:textSize="25sp" />
@@ -51,6 +55,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
+        style="@style/SCREEN"
         android:orientation="horizontal">
 
         <TextView
@@ -58,6 +63,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            style="@style/EXTRA_TEXT"
             android:text="Likes: 0" />
 
         <TextView
@@ -73,12 +79,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
+        style="@style/SCREEN"
         android:orientation="horizontal">
 
         <Button
             android:id="@+id/likeButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            style="@style/BUTTON"
             android:layout_weight="1"
             android:text="Like" />
 
@@ -92,6 +100,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            style="@style/BUTTON"
             android:text="Replies" />
 
         <Space
@@ -104,6 +113,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            style="@style/BUTTON"
             android:text="Comment" />
     </LinearLayout>
 

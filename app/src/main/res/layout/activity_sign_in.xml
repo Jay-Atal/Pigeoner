@@ -5,6 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    style="@style/SCREEN"
     tools:context=".Activities.SignIn">
 
     <LinearLayout
@@ -28,6 +29,7 @@
             android:layout_width="wrap_content"
             android:layout_height="30dp"
             android:fontFamily="sans-serif"
+            style="@style/TEXT"
             android:text="Welcome To Pigeoner"
             android:textSize="20sp" />
 
@@ -40,6 +42,7 @@
             android:layout_width="wrap_content"
             android:layout_height="30dp"
             android:fontFamily="sans-serif"
+            style="@style/TEXT"
             android:text="Sign In"
             android:textSize="20sp" />
 
@@ -51,6 +54,7 @@
             android:id="@+id/emailLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            style="@style/TEXT"
             android:text="Email" />
 
         <EditText
@@ -58,6 +62,7 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:ems="10"
+            style="@style/EXTRA_TEXT"
             android:inputType="textEmailAddress" />
 
         <Space
@@ -68,6 +73,7 @@
             android:id="@+id/amountLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            style="@style/TEXT"
             android:text="Password" />
 
         <EditText
@@ -76,6 +82,7 @@
             android:layout_height="50dp"
             android:autofillHints="password"
             android:ems="10"
+            style="@style/EXTRA_TEXT"
             android:inputType="textPassword" />
 
         <Space
@@ -86,6 +93,7 @@
             android:id="@+id/addButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            style="@style/BUTTON"
             android:text="Sign In" />
 
     </LinearLayout>
@@ -97,6 +105,7 @@
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="50dp"
+        style="@style/BUTTON"
         android:text="Don't Have An Account?"
         android:textAllCaps="true"
         app:layout_constraintBottom_toBottomOf="parent"

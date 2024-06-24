@@ -5,6 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    style="@style/SCREEN"
     tools:context=".Activities.SignUp">
 
     <LinearLayout
@@ -30,11 +31,13 @@
 
         <TextView
             android:id="@+id/signUpText"
+            style="@style/TEXT"
             android:layout_width="wrap_content"
             android:layout_height="30dp"
             android:fontFamily="sans-serif"
             android:text="Sign Up"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
         <Space
             android:layout_width="match_parent"
@@ -44,6 +47,7 @@
             android:id="@+id/emailLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            style="@style/TEXT"
             android:text="Username" />
 
         <EditText
@@ -51,6 +55,7 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:ems="10"
+            style="@style/EXTRA_TEXT"
             android:inputType="text" />
 
         <Space
@@ -61,6 +66,7 @@
             android:id="@+id/nameLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            style="@style/TEXT"
             android:text="Name" />
 
         <EditText
@@ -68,6 +74,7 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:ems="10"
+            style="@style/EXTRA_TEXT"
             android:inputType="text" />
 
         <Space
@@ -78,6 +85,7 @@
             android:id="@+id/amountLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            style="@style/TEXT"
             android:text="Password" />
 
         <EditText
@@ -86,6 +94,7 @@
             android:layout_height="50dp"
             android:autofillHints="password"
             android:ems="10"
+            style="@style/EXTRA_TEXT"
             android:inputType="textPassword" />
 
         <Space
@@ -96,6 +105,7 @@
             android:id="@+id/confirmPasswordLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            style="@style/TEXT"
             android:text="Confirm Password" />
 
         <EditText
@@ -104,6 +114,7 @@
             android:layout_height="50dp"
             android:autofillHints="password"
             android:ems="10"
+            style="@style/EXTRA_TEXT"
             android:inputType="textPassword" />
 
 
@@ -115,6 +126,7 @@
             android:id="@+id/cancelButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            style="@style/BUTTON"
             android:text="Sign Up" />
 
     </LinearLayout>
@@ -126,6 +138,7 @@
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="50dp"
+        style="@style/BUTTON"
         android:text="Already Have An Account?"
         android:textAllCaps="true"
         app:layout_constraintBottom_toBottomOf="parent"

@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    style="@style/SCREEN"
     tools:context=".Fragments.Settings">
 
     <!-- TODO: Update blank fragment layout -->
@@ -23,6 +24,7 @@
             android:text="Settings"
             android:textAlignment="center"
             android:textSize="25sp"
+            style="@style/TEXT"
             android:textStyle="bold" />
 
         <Space
@@ -34,6 +36,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Change Theme:"
+            style="@style/TEXT"
             android:textSize="20sp" />
 
         <Space
@@ -44,6 +47,7 @@
             android:id="@+id/changeThemeButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            style="@style/BUTTON"
             android:text="Change Theme to Dark Mode" />
 
         <Space
@@ -54,6 +58,7 @@
             android:id="@+id/signOut"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            style="@style/BUTTON"
             android:text="Sign Out" />
     </LinearLayout>
 

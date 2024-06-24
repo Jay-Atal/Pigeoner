@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    style="@style/SCREEN"
     tools:context=".Fragments.AddPost">
 
     <LinearLayout
@@ -19,6 +20,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
+            style="@style/TEXT"
             android:text="Share your message:"
             android:textAlignment="center"
             android:textSize="25sp"
@@ -33,6 +35,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
+            style="@style/EXTRA_TEXT"
             android:hint="Enter your message here"
             android:inputType="text" />
 
@@ -44,6 +47,7 @@
             android:id="@+id/sendButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            style="@style/BUTTON"
             android:text="Send" />
     </LinearLayout>
 

@@ -5,6 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    style="@style/SCREEN"
     tools:context=".Activities.TabActivity">
 
     <com.google.android.material.tabs.TabLayout
@@ -19,36 +20,42 @@
             android:id="@+id/homeTabItem"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            style="@style/TEXT"
             android:text="Home" />
 
         <com.google.android.material.tabs.TabItem
             android:id="@+id/exploreTabItem"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            style="@style/TEXT"
             android:text="Explore" />
 
         <com.google.android.material.tabs.TabItem
             android:id="@+id/likedPostTabItem"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            style="@style/TEXT"
             android:text="Liked" />
 
         <com.google.android.material.tabs.TabItem
             android:id="@+id/newPostTabItem"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            style="@style/TEXT"
             android:text="Add Post" />
 
         <com.google.android.material.tabs.TabItem
             android:id="@+id/profileTabItem"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            style="@style/TEXT"
             android:text="Profile" />
 
         <com.google.android.material.tabs.TabItem
             android:id="@+id/settingsTabItem"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            style="@style/TEXT"
             android:text="Setting" />
     </com.google.android.material.tabs.TabLayout>
 

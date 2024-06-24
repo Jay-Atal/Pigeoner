@@ -5,6 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    style="@style/SCREEN"
     tools:context=".Activities.Following">
 
     <LinearLayout
@@ -25,6 +26,7 @@
             android:id="@+id/repliesTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            style="@style/TEXT"
             android:text="Replies: "
             android:textAlignment="center"
             android:textSize="25sp"

@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    style="@style/SCREEN"
     tools:context=".Fragments.Profile">
 
     <LinearLayout
@@ -49,6 +50,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Name"
+                        style="@style/TEXT"
                         android:textSize="25sp" />
 
                     <TextView
@@ -56,6 +58,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Bio"
+                        style="@style/TEXT"
                         android:textSize="15sp" />
                 </LinearLayout>
 
@@ -64,6 +67,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Follow"
+                    style="@style/BUTTON"
                     tools:visibility="gone" />
 
             </LinearLayout>
@@ -79,6 +83,7 @@
             android:id="@+id/profileFollowersTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            style="@style/TEXT"
             android:text="Followers: 0"
             android:textAlignment="center"
             android:textSize="30sp" />
@@ -91,6 +96,7 @@
             android:id="@+id/profileFollowingTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            style="@style/TEXT"
             android:text="Following: 0"
             android:textAlignment="center"
             android:textSize="30sp" />
@@ -103,6 +109,7 @@
             android:id="@+id/recentActivityTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            style="@style/TEXT"
             android:text="Recent Acitvity:"
             android:textSize="20sp" />
 
