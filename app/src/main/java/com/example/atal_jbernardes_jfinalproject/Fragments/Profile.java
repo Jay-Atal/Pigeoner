@@ -2,6 +2,7 @@ package com.example.atal_jbernardes_jfinalproject.Fragments;
 
 import static android.app.Activity.RESULT_OK;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -282,7 +283,9 @@ public class Profile extends Fragment {
                                 return;
                             }
                             imageView.setImageURI(task.getResult());
-                            Glide.with(getContext()).load(task.getResult()).into(imageView);
+                            if(isValidContextForGlide(getContext())) {
+                                Glide.with(getContext()).load(task.getResult()).into(imageView);
+                            }
 //                                   Picasso.get().load(task.getResult()).into(imageView);
 //                            Picasso.with()
 //                                    .load(task.getResult())
@@ -576,6 +579,18 @@ public class Profile extends Fragment {
             }
         }
         return -1;
+    }
+    public static boolean isValidContextForGlide(final Context context) {
+        if (context == null) {
+            return false;
+        }
+        if (context instanceof Activity) {
+            final Activity activity = (Activity) context;
+            if (activity.isDestroyed() || activity.isFinishing()) {
+                return false;
+            }
+        }
+        return true;
     }
 
 
