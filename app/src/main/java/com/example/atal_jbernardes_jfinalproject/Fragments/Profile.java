@@ -90,6 +90,9 @@ public class Profile extends Fragment {
     private TextView following;
     private View nameBio;
 
+    private List<Pigeon> pigeons;
+
+    private boolean onLaunch;
     RecyclerView recyclerView;
 
 
@@ -148,6 +151,8 @@ public class Profile extends Fragment {
         imageView = view.findViewById(R.id.imageView);
         nameField = view.findViewById(R.id.profileUsernameTextView);
         bioField = view.findViewById(R.id.profileBioTextView);
+        pigeons = new ArrayList<>();
+        onLaunch = true;
         getUserData();
         getPigeons();
 
@@ -340,7 +345,6 @@ public class Profile extends Fragment {
     }
 
     private void getPigeons() {
-        List<Pigeon> pigeons = new ArrayList<>();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("Pigeons").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -367,7 +371,7 @@ public class Profile extends Fragment {
                 });
                 recyclerView.setAdapter(postAdapter);
                 recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-                recyclerView.getAdapter().notifyDataSetChanged();
+                postAdapter.update();
             }
         });
     }
@@ -383,7 +387,31 @@ public class Profile extends Fragment {
                             return;
                         }
                         if (snapshots != null && !snapshots.isEmpty()) {
-                            getPigeons();
+                            if(onLaunch) {
+                                onLaunch = false;
+                                return;
+                            }
+                            for (DocumentChange documentChange: snapshots.getDocumentChanges())
+                                switch (documentChange.getType()) {
+                                    case ADDED:
+
+                                        break;
+                                    case MODIFIED:
+                                        Log.d("Explore", documentChange.getDocument().toString());
+                                        Pigeon currentPigeon = documentChange.getDocument().toObject(Pigeon.class);
+                                        int pigeonIndex = getPigeonIndex(currentPigeon.getPigeonId());
+                                        if(pigeonIndex == -1) {
+                                            pigeons.add(0, currentPigeon);
+                                        } else {
+                                            pigeons.remove(pigeonIndex);
+                                            pigeons.add(pigeonIndex, currentPigeon);
+                                        }
+                                        recyclerView.getAdapter().notifyDataSetChanged();
+                                        break;
+                                    case REMOVED:
+
+                                        break;
+                                }
                         }
                     }
                 });
@@ -519,6 +547,16 @@ public class Profile extends Fragment {
             });
         });
         dialog.show();
+    }
+
+    private int getPigeonIndex(String id) {
+        for(int i = 0; i < pigeons.size(); i++) {
+            Pigeon currentPigeon = pigeons.get(i);
+            if(currentPigeon.getPigeonId().equals(id)) {
+                return i;
+            }
+        }
+        return -1;
     }
 
 

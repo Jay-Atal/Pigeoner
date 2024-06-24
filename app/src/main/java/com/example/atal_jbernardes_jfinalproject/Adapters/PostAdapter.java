@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -40,10 +39,13 @@ public class PostAdapter extends RecyclerView.Adapter<PostViewHolder> {
     private List<Pigeon> myPosts;
 
     private FirebaseStorage storage;
+    List<String> likesByUser;
 
 
     public PostAdapter(@NonNull List<Pigeon> myPosts) {
         this.myPosts = myPosts;
+        likesByUser = new ArrayList<>();
+        getLikesByFollowers();
     }
 
     @NonNull
@@ -60,6 +62,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostViewHolder> {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference documentReference = db.collection("Users").document(
                 currentPost.getUserId());
+        holder.likeButton.setText((likesByUser.contains(currentPost.getPigeonId())) ? "Un Like" : "Like");
         documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -80,7 +83,10 @@ public class PostAdapter extends RecyclerView.Adapter<PostViewHolder> {
             startActivity(holder.userAccountInfo.getContext(), intent, new Bundle());
         });
 
-        holder.likeButton.setOnClickListener(v-> updateCollection("Likes", currentPost.getPigeonId(), FirebaseAuth.getInstance().getUid(), holder.likeButton));
+        holder.likeButton.setOnClickListener(v -> {
+            updatePostLikeCollection("Likes", currentPost.getPigeonId(), FirebaseAuth.getInstance().getUid(), holder.likeButton);
+            updateUserLikeCollection("LikesByUser", FirebaseAuth.getInstance().getUid(), currentPost.getPigeonId());
+        });
 
         StorageReference httpsReference;
         try {
@@ -136,7 +142,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostViewHolder> {
         }
     }
 
-    private void updateCollection(String collectionName, String document, String value, Button likeButton) {
+    private void updatePostLikeCollection(String collectionName, String document, String value, Button likeButton) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection(collectionName).document(document).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -160,7 +166,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostViewHolder> {
                     }
                 }
                 boolean added;
-                if(list.contains(value)) {
+                if (list.contains(value)) {
                     added = false;
                     list.remove(value);
                     likeButton.setText("Like");
@@ -170,17 +176,17 @@ public class PostAdapter extends RecyclerView.Adapter<PostViewHolder> {
                     likeButton.setText("Un Like");
                 }
                 db.collection("Pigeons").document(document).get().addOnCompleteListener(task1 -> {
-                    if(!task1.isSuccessful()){
+                    if (!task1.isSuccessful()) {
                         return;
                     }
                     DocumentSnapshot documentSnapshot = task1.getResult();
                     Pigeon pigeon1 = documentSnapshot.toObject(Pigeon.class);
-                    if(pigeon1 == null){
+                    if (pigeon1 == null) {
                         Log.d("PostAdapter", "pigeon is null" + document);
                         return;
                     }
-                    int like =  pigeon1.getLikeCount();
-                    if(added) {
+                    int like = pigeon1.getLikeCount();
+                    if (added) {
                         like++;
                     } else {
                         like--;
@@ -193,6 +199,74 @@ public class PostAdapter extends RecyclerView.Adapter<PostViewHolder> {
                 db.collection(collectionName).document(document).set(data, SetOptions.merge());
             }
         });
+    }
+
+    private void updateUserLikeCollection(String collectionName, String document, String value) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection(collectionName).document(document).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                Map<String, Object> data = new HashMap<>();
+                List<String> list;
+                if (!task.isSuccessful()) {
+                    list = new ArrayList<>();
+                } else {
+                    if (task != null) {
+                        DocumentSnapshot documentSnapshot = task.getResult();
+
+                        data = documentSnapshot.getData();
+                    }
+                    if (data == null) {
+                        data = new HashMap<>();
+                    }
+                    list = (List<String>) data.getOrDefault(collectionName, new ArrayList<>());
+                    if (list == null) {
+                        list = new ArrayList<>();
+                    }
+                }
+                if (list.contains(value)) {
+                    list.remove(value);
+                } else {
+                    list.add(value);
+                }
+                data.put(collectionName, list);
+                db.collection(collectionName).document(document).set(data, SetOptions.merge());
+            }
+        });
+    }
+
+    public void update() {
+        getLikesByFollowers();
+    }
+
+    public void getLikesByFollowers() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("LikesByUser").document(FirebaseAuth.getInstance().getUid()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                Map<String, Object> data = new HashMap<>();
+                List<String> list;
+                if (!task.isSuccessful()) {
+                    list = new ArrayList<>();
+                } else {
+                    if (task != null) {
+                        DocumentSnapshot documentSnapshot = task.getResult();
+
+                        data = documentSnapshot.getData();
+                    }
+                    if (data == null) {
+                        data = new HashMap<>();
+                    }
+                    list = (List<String>) data.getOrDefault("LikesByUser", new ArrayList<>());
+                    if (list == null) {
+                        list = new ArrayList<>();
+                    }
+                }
+                likesByUser = list;
+                notifyDataSetChanged();
+            }
+        });
+
     }
 
 

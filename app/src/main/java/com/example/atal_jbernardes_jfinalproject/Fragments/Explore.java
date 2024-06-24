@@ -1,5 +1,9 @@
 package com.example.atal_jbernardes_jfinalproject.Fragments;
 
+import static com.google.api.ChangeType.ADDED;
+import static com.google.api.ChangeType.MODIFIED;
+import static com.google.api.ChangeType.REMOVED;
+
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -46,6 +50,12 @@ public class Explore extends Fragment {
     private String mParam2;
     private RecyclerView recyclerView;
 
+    private List<Pigeon> pigeons;
+
+    private boolean onLaunch;
+
+    private PostAdapter postAdapter;
+
 
     public Explore() {
         // Required empty public constructor
@@ -84,13 +94,13 @@ public class Explore extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_explore, container, false);
         recyclerView = view.findViewById(R.id.exploreRecyclerView);
+        pigeons = new ArrayList<>();
+        onLaunch = true;
         getPigeons();
-        attachFirestoreListener();
         return view;
     }
 
     private void getPigeons() {
-        List<Pigeon> pigeons = new ArrayList<>();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("Pigeons").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -106,7 +116,7 @@ public class Explore extends Fragment {
                     pigeons.add(pigeon);
                 }
 
-                PostAdapter postAdapter = new PostAdapter(pigeons);
+                postAdapter = new PostAdapter(pigeons);
                 pigeons.sort(new Comparator<Pigeon>() {
                     @Override
                     public int compare(Pigeon o1, Pigeon o2) {
@@ -116,11 +126,13 @@ public class Explore extends Fragment {
                 recyclerView.setAdapter(postAdapter);
                 recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
                 recyclerView.getAdapter().notifyDataSetChanged();
+                attachFirestoreListener();
             }
         });
     }
 
     private void attachFirestoreListener() {
+
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("Pigeons")
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -131,11 +143,42 @@ public class Explore extends Fragment {
                             return;
                         }
                         if (snapshots != null && !snapshots.isEmpty()) {
-                            for (QueryDocumentSnapshot snaptshot: snapshots)
-                                Log.d("Explore", snaptshot.toString());
-                            getPigeons();
+                            if(onLaunch) {
+                                onLaunch = false;
+                                return;
+                            }
+                            for (DocumentChange documentChange: snapshots.getDocumentChanges())
+                                switch (documentChange.getType()) {
+                                    case ADDED:
+
+                                        break;
+                                    case MODIFIED:
+                                        Log.d("Explore", documentChange.getDocument().toString());
+                                        Pigeon currentPigeon = documentChange.getDocument().toObject(Pigeon.class);
+                                        int pigeonIndex = getPigeonIndex(currentPigeon.getPigeonId());
+                                        if(pigeonIndex == -1) {
+                                            pigeons.add(0, currentPigeon);
+                                        } else {
+                                            pigeons.remove(pigeonIndex);
+                                            pigeons.add(pigeonIndex, currentPigeon);
+                                        }
+                                        postAdapter.update();
+                                        break;
+                                    case REMOVED:
+
+                                        break;
+                                }
                         }
                     }
                 });
+    }
+    private int getPigeonIndex(String id) {
+        for(int i = 0; i < pigeons.size(); i++) {
+            Pigeon currentPigeon = pigeons.get(i);
+            if(currentPigeon.getPigeonId().equals(id)) {
+                return i;
+            }
+        }
+        return -1;
     }
 }
