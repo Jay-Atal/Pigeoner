@@ -25,6 +25,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
@@ -78,6 +79,7 @@ public class Replies extends AppCompatActivity {
                 postAdapter = new PostAdapter(pigeons);
                 recyclerView.setAdapter(postAdapter);
                 recyclerView.setLayoutManager(new LinearLayoutManager(Replies.this));
+                pigeons.sort((o1, o2) -> o2.getTimestamp().compareTo(o1.getTimestamp()));
                 recyclerView.getAdapter().notifyDataSetChanged();
                 attachFirestoreListener();
             }
