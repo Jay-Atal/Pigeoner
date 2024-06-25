@@ -137,6 +137,7 @@ public class Explore extends Fragment {
                 recyclerView.setAdapter(postAdapter);
                 recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
                 recyclerView.getAdapter().notifyDataSetChanged();
+                postAdapter.update();
                 attachFirestoreListener();
             }
         });

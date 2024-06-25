@@ -126,6 +126,9 @@ public class Replies extends AppCompatActivity {
                                         Log.d("Explore", documentChange.getDocument().toString());
                                         Pigeon currentPigeon = documentChange.getDocument().toObject(Pigeon.class);
                                         int pigeonIndex = getPigeonIndex(currentPigeon.getPigeonId());
+                                        if(!Objects.equals(parentId, currentPigeon.getParentId())){
+                                            return;
+                                        }
                                         if(pigeonIndex == -1) {
                                             pigeons.add(0, currentPigeon);
                                         } else {

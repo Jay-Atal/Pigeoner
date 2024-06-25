@@ -284,6 +284,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostViewHolder> {
     }
 
     public void update() {
+        myPosts.sort((o1, o2) -> o2.getTimestamp().compareTo(o1.getTimestamp()));
         getLikesByFollowers();
     }
 

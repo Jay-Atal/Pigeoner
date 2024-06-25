@@ -507,7 +507,7 @@ public class Profile extends Fragment {
                 } else {
                     followButton.setText("Follow");
                 }
-                // Set List size
+                // Set List sizep
                 TextView followingLabel = view.findViewById(R.id.profileFollowersTextView);
                 followingLabel.setText("Followers: " + list.size());
 
