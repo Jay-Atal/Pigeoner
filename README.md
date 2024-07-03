@@ -58,7 +58,7 @@ https://www.youtube.com/watch?v=cchw-jIEsAI
 - Follower / Following list view retrevial from database
 
 
-## [Joel Bernardes]([https://github.com/Jay-Atal](https://github.com/JoelBernardes))
+## [Joel Bernardes](https://github.com/JoelBernardes)
 - Splash Screen
 - Layout
 - Theme
