@@ -1,5 +1,10 @@
 # README
 
+# Pigeoner
+A revolutionary new app that allows people to openly communicate about what they are thinking and broadcast their vision to the world. This app provides anybody with the app and an internet connection to transmit messages to the world.
+
+This app allows users to communicate their ideas to others. Within the app, you can reply to posts and set up your profile with a bio for others. Furthermore, users can connect with others to receive notifications when their connections publish a post.
+
 ## Link To Demo
 https://www.youtube.com/watch?v=cchw-jIEsAI
 
